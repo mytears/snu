@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title></title>
+
+    <link rel="shortcut icon" href="favicon.ico" type="image/x-icon">
+
+    <link rel="stylesheet" href="include/css/common.css">
+    <link rel="stylesheet" href="include/css/index.css">
+
+    <script src="include/js/lib/lottie-player.js"></script>
+    <script src="include/js/lib/jquery.min.js"></script>
+    <script src="include/js/lib/jquery.ripples.min.js"></script>
+    <script src="include/js/lib/gsap.min.js"></script>
+    <script src="include/js/lib/MotionPathPlugin.min.js"></script>
+    <script src="include/js/lib/qrcode.js"></script>
+    <script src="include/js/comm.js"></script>
+    <script src="include/js/index.js"></script>
+</head>
+
+<body>
+    <div class="main_cont">
+        <div class="cover">
+            <div class="loading-spinner"></div>
+        </div>
+
+        <div class="pass_page base_page" style="display:none;">
+            <div class="pass_zone">
+                <div class="pass_title">비밀번호를 입력해주세요</div>
+                <div class="pass_dot_zone">
+                    <div class="pass_dot active"></div>
+                    <div class="pass_dot inactive"></div>
+                    <div class="pass_dot inactive"></div>
+                    <div class="pass_dot inactive"></div>
+                    <div class="pass_dot inactive"></div>
+                    <div class="pass_dot inactive"></div>
+                </div>
+                <div class="pass_key_zone">
+                    <div class="key">1</div>
+                    <div class="key">2</div>
+                    <div class="key">3</div>
+                    <div class="key">4</div>
+                    <div class="key">5</div>
+                    <div class="key">6</div>
+                    <div class="key">7</div>
+                    <div class="key">8</div>
+                    <div class="key">9</div>
+                    <div class="key">0</div>
+                    <div class="key back_key"></div>
+                </div>
+                <div class="pass_login_zone">
+                    <div class="key login_key">LOGIN</div>
+                </div>
+            </div>
+            <div class="pass_btn_home">
+            </div>
+
+            <div class="page_bg">
+                <img src="images/bg.png" />
+            </div>
+        </div>
+
+
+        <div class="main_page base_page" style="display: no1ne;">
+            <div class="btn_pass">
+            </div>
+            <div class="icon_obj">
+                <img src="images/logo.svg" />
+            </div>
+        </div>
+
+        <div class="page_bg">
+            <img src="images/bg.png" />
+        </div>
+    </div>
+</body></html>
+<script language="javascript">
+    window.addEventListener('DOMContentLoaded', function() {
+        setTimeout(setInit, 100);
+    });
+
+</script>

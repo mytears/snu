@@ -1,0 +1,120 @@
+﻿.main_cont {
+    width: 2160px;
+    height: 3840px;
+    position: relative;
+    background-color: #FFFFFF;
+    /*    background-image: url("../../images/bg.png");*/
+}
+
+.cover {
+    display: flex;
+    width: 100%;
+    height: 100%;
+    background-color: #000;
+    position: absolute;
+    z-index: 9999;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+@keyframes rotate {
+    from {
+        transform: rotate(0deg);
+    }
+
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+.loading-spinner {
+    width: 200px;
+    height: 200px;
+    border: 20px solid #FFFFFF;
+    border-top: 20px solid transparent;
+    border-radius: 50%;
+    animation: rotate 1s linear infinite;
+}
+
+.icon_obj {
+    position: absolute;
+    z-index: 1;
+}
+
+.btn_pass {
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    width: 500px;
+    height: 300px;
+    border: 5px solid #FF0000;
+    z-index: 1;
+}
+
+.page_bg {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+}
+
+.base_page {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+}
+
+.main_page {
+    z-index: 10;
+}
+
+.pass_page {
+    z-index: 20;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.pass_zone {
+    position: absolute;
+    width: 1457px;
+    height: 1806px;
+    background: #192F82 0% 0% no-repeat padding-box;
+    border: 3px solid #849CFFA6;
+    border-radius: 132px;
+    opacity: 0.8;
+    z-index: 10;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+}
+
+.pass_title {
+    width: 100%;
+    font-size: 65px;
+    text-align: center;
+}
+
+.pass_key_zone {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap;
+    width: 93%;
+}
+
+.key {
+    width: 164px;
+    height: 162px;
+    background: #122265 0% 0% no-repeat padding-box;
+    box-shadow: inset 0px 3px 0px #3550C1;
+    border-radius: 20px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-left: 40px;
+    margin-right: 40px;
+}
