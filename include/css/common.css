@@ -1,35 +1,17 @@
 ﻿@font-face {
-    font-family: scdream;
-    src: url(font/SCDream4.woff2) format('woff2');
-    font-weight: 500;
+    font-family: 'pretendard';
+    font-weight: 400;
+    src: url(fonts/Pretendard-Regular.woff2) format('woff2');
 }
 
 @font-face {
-    font-family: scdream;
-    src: url(font/SCDream5.woff2) format('woff2');
-    font-weight: 600;
-}
-
-@font-face {
-    font-family: scdream;
-    src: url(font/SCDream8.woff2) format('woff2');
-    font-weight: 800;
-}
-
-@font-face {
-    font-family: hambak;
-    src: url(font/SF_HambakSnow.woff2) format('woff2');
-    font-weight: 500;
-}
-
-@font-face {
-    font-family: chosun;
-    src: url(font/ChosunGs.woff2) format('woff2');
-    font-weight: 500;
+    font-family: 'pretendard';
+    font-weight: 700;
+    src: url(fonts/Pretendard-Bold.woff2) format('woff2');
 }
 
 * {
-    font-family: scdream;
+    font-family: 'pretendard';
     margin: 0;
     padding: 0;
     -webkit-text-size-adjust: none;

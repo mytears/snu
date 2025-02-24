@@ -17,7 +17,7 @@ var m_icon_dx = 5; // x축 방향 속도
 var m_icon_dy = 2.5; // y축 방향 속도){
 var m_pass_click_cnt = 0;
 var m_pass_timeout;
-
+let m_curr_pass_txt = "";
 
 function setInit() {
 
@@ -26,10 +26,41 @@ function setInit() {
         onClickBtnPass(this);
     });
 
+    $(".key").on("touchstart mousedown", function (e) {
+        e.preventDefault();
+        onClickBtnKey(this);
+    });
+
     m_time_last = new Date().getTime();
     setInterval(setMainInterval, 1000);
     setLoadSetting("include/setting.json");
     setInitFsCommand();
+}
+
+function onClickBtnKey(_obj) {
+    if ($(_obj).hasClass("back_key")) {
+        //console.log("back");
+        if(m_curr_pass_txt.length > 0){
+            m_curr_pass_txt = m_curr_pass_txt.substr(0,m_curr_pass_txt.length-1);
+        }
+    } else if ($(_obj).hasClass("login_key")) {
+        console.log("login");
+        return;
+    } else {
+        //console.log($(_obj).html());
+        if (m_curr_pass_txt.length < 6 && m_curr_pass_txt.length >= 0) {
+            m_curr_pass_txt = m_curr_pass_txt + $(_obj).html();
+        }
+    };
+
+    $(".pass_dot").each(function (index) {
+        if (index < m_curr_pass_txt.length) {
+            $(this).addClass("active");
+        } else {
+            $(this).removeClass("active");
+        }
+    });
+    console.log(m_curr_pass_txt);
 }
 
 function onClickBtnPass(_obj) {
@@ -153,8 +184,24 @@ function startAnimation() {
     moveIcon();
 }
 
-function setShowPassPage(){
+function setShowPassPage() {
     $(".pass_page").show();
+    $(".pass_dot").removeClass("active");
+    m_curr_pass_txt = "";
+    setDotsCount();
+
+}
+
+function setDotsCount() {
+    let passLength = m_curr_pass_txt.length;
+
+    $(".pass_dot").each(function (index) {
+        if (index < passLength) {
+            $(this).addClass("active");
+        } else {
+            $(this).removeClass("active");
+        }
+    });
 }
 
 

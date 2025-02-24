@@ -81,10 +81,9 @@
     position: absolute;
     width: 1457px;
     height: 1806px;
-    background: #192F82 0% 0% no-repeat padding-box;
+    background: #192F82CC 0% 0% no-repeat padding-box;
     border: 3px solid #849CFFA6;
     border-radius: 132px;
-    opacity: 0.8;
     z-index: 10;
     display: flex;
     justify-content: center;
@@ -96,6 +95,29 @@
     width: 100%;
     font-size: 65px;
     text-align: center;
+    font-weight: 400;
+    margin-top: 200px;
+}
+
+.pass_dot_zone {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 200px;
+    margin-bottom: 220px;
+}
+
+.pass_dot {
+    width: 72px;
+    height: 72px;
+    background: #4B5FB1;
+    border-radius: 100px;
+    margin-left: 26px;
+    margin-right: 26px;
+}
+
+.pass_dot.active{
+    background: #0EAAFB;
 }
 
 .pass_key_zone {
@@ -103,7 +125,7 @@
     justify-content: center;
     align-items: center;
     flex-wrap: wrap;
-    width: 93%;
+    width: 85%;
 }
 
 .key {
@@ -115,6 +137,23 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    margin-left: 40px;
-    margin-right: 40px;
+    margin-left: 10px;
+    margin-right: 10px;
+    margin-bottom: 46px;
+}
+
+.key:active {
+    background-color: #536AC7;
+}
+
+.back_key {
+    width: 348px;
+    background-image: url("../../images/ico_arrow.svg");
+    background-position: center;
+    background-repeat: 
+}
+
+.login_key {
+    width: 600px;
+    margin-top: 100px;
 }
