@@ -1,0 +1,52 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="636" height="511" viewBox="0 0 636 511">
+  <defs>
+    <filter id="사각형_48" x="0" y="0" width="636" height="511" filterUnits="userSpaceOnUse">
+      <feOffset dy="30" input="SourceAlpha"/>
+      <feGaussianBlur stdDeviation="20" result="blur"/>
+      <feFlood flood-opacity="0.18"/>
+      <feComposite operator="in" in2="blur"/>
+      <feComposite in="SourceGraphic"/>
+    </filter>
+    <filter id="사각형_48-2" x="0" y="0" width="636" height="511" filterUnits="userSpaceOnUse">
+      <feOffset dy="3" input="SourceAlpha"/>
+      <feGaussianBlur result="blur-2"/>
+      <feFlood flood-color="#fff" flood-opacity="0.341" result="color"/>
+      <feComposite operator="out" in="SourceGraphic" in2="blur-2"/>
+      <feComposite operator="in" in="color"/>
+      <feComposite operator="in" in2="SourceGraphic"/>
+    </filter>
+    <filter id="사각형_49" x="26" y="21" width="584" height="464" filterUnits="userSpaceOnUse">
+      <feOffset dy="30" input="SourceAlpha"/>
+      <feGaussianBlur stdDeviation="20" result="blur-3"/>
+      <feFlood flood-opacity="0.18"/>
+      <feComposite operator="in" in2="blur-3"/>
+      <feComposite in="SourceGraphic"/>
+    </filter>
+    <filter id="사각형_49-2" x="26" y="21" width="584" height="464" filterUnits="userSpaceOnUse">
+      <feOffset dy="3" input="SourceAlpha"/>
+      <feGaussianBlur result="blur-4"/>
+      <feFlood flood-color="#6384f5" result="color-2"/>
+      <feComposite operator="out" in="SourceGraphic" in2="blur-4"/>
+      <feComposite operator="in" in="color-2"/>
+      <feComposite operator="in" in2="SourceGraphic"/>
+    </filter>
+  </defs>
+  <g id="bt_1" transform="translate(-668 -476)">
+    <g data-type="innerShadowGroup">
+      <g transform="matrix(1, 0, 0, 1, 668, 476)" filter="url(#사각형_48)">
+        <rect id="사각형_48-3" data-name="사각형 48" width="516" height="391" rx="87" transform="translate(60 30)" fill="#4467d5"/>
+      </g>
+      <g transform="matrix(1, 0, 0, 1, 668, 476)" filter="url(#사각형_48-2)">
+        <rect id="사각형_48-4" data-name="사각형 48" width="516" height="391" rx="87" transform="translate(60 30)" fill="#fff"/>
+      </g>
+    </g>
+    <g data-type="innerShadowGroup">
+      <g transform="matrix(1, 0, 0, 1, 668, 476)" filter="url(#사각형_49)">
+        <rect id="사각형_49-3" data-name="사각형 49" width="464" height="344" rx="65" transform="translate(86 51)" fill="#1b2e81"/>
+      </g>
+      <g transform="matrix(1, 0, 0, 1, 668, 476)" filter="url(#사각형_49-2)">
+        <rect id="사각형_49-4" data-name="사각형 49" width="464" height="344" rx="65" transform="translate(86 51)" fill="#fff"/>
+      </g>
+    </g>
+  </g>
+</svg>

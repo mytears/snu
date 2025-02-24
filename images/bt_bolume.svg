@@ -1,0 +1,27 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="93" height="98" viewBox="0 0 93 98">
+  <defs>
+    <filter id="bt_bolume" x="0" y="0" width="93" height="98" filterUnits="userSpaceOnUse">
+      <feOffset dy="20" input="SourceAlpha"/>
+      <feGaussianBlur stdDeviation="5" result="blur"/>
+      <feFlood flood-opacity="0.161"/>
+      <feComposite operator="in" in2="blur"/>
+      <feComposite in="SourceGraphic"/>
+    </filter>
+    <filter id="bt_bolume-2" x="0" y="0" width="93" height="98" filterUnits="userSpaceOnUse">
+      <feOffset dy="5" input="SourceAlpha"/>
+      <feGaussianBlur result="blur-2"/>
+      <feFlood flood-color="#fff" result="color"/>
+      <feComposite operator="out" in="SourceGraphic" in2="blur-2"/>
+      <feComposite operator="in" in="color"/>
+      <feComposite operator="in" in2="SourceGraphic"/>
+    </filter>
+  </defs>
+  <g data-type="innerShadowGroup">
+    <g transform="matrix(1, 0, 0, 1, 0, 0)" filter="url(#bt_bolume)">
+      <circle id="bt_bolume-3" data-name="bt_bolume" cx="31.5" cy="31.5" r="31.5" transform="translate(15)" fill="#eef0ff"/>
+    </g>
+    <g transform="matrix(1, 0, 0, 1, 0, 0)" filter="url(#bt_bolume-2)">
+      <circle id="bt_bolume-4" data-name="bt_bolume" cx="31.5" cy="31.5" r="31.5" transform="translate(15)" fill="#fff"/>
+    </g>
+  </g>
+</svg>
