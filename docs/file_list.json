@@ -1,0 +1,36 @@
+{
+    "header": {
+        "code": "SUCC",
+        "base_path": "C:\\temp_download\\content"
+        "base_ppt_path": "C:\\temp_download\\ppt"
+    },
+    "list": [
+        {
+			"type":"contents",
+            "layer": "1",
+            "clip": "1",
+            "file_name": "main_001.mp4",
+            "file_size": "5309952",
+            "file_url": "https://0000.com/0000.mp4",
+            "upd_date": "20250123083353"
+        },
+        {
+			"type":"contents",
+            "layer": "2",
+            "clip": "1",
+            "file_name": "main_002.mp4",
+            "file_size": "5309952",
+            "file_url": "https://0000.com/0000.mp4",
+            "upd_date": "20250123083353"
+        },
+        {
+			"type":"ppt",
+            "layer": "",
+            "clip": "",
+            "file_name": "ppt_001.pptx",
+            "file_size": "5309952",
+            "file_url": "https://0000.com/0000.pptx",
+            "upd_date": "20250123083353"
+        }
+    ]
+}

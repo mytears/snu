@@ -1,0 +1,87 @@
+먼저 Resolume Arena 7 API 관련사항입니다.
+
+개발 기간 사용하실 Resolume Arena 시리얼 : RSLM-RQA8-QPEB-J9V2-ZYFB 
+** 개발 끝난 뒤에 Unregister 부탁드립니다.
+
+Clear Layer : 가로 레이어 클리어
+
+ 
+
+curl -X 'POST' \
+
+  'http://127.0.0.1:8080/api/v1/composition/layers/3/clearclips' \
+
+  -H 'accept: */*' \
+
+  -d ''
+
+
+Loads a file : 지정한 레이어, 컬럼에 곧바로 로딩
+
+
+
+curl -X 'POST' \
+
+  'http://127.0.0.1:8080/api/v1/composition/layers/3/clips/3/open' \
+
+  -H 'accept: */*' \
+
+  -H 'Content-Type: text/plain' \
+
+  -d 'file:///C:/~~~/TEST.AVI'
+
+
+
+
+
+대안 : 클립 선택 후 해당 클립에 파일 로딩 (번거로우실 듯 합니다.)
+
+Select Clip : by layer and column
+
+
+
+curl -X 'POST' \
+
+  'http://127.0.0.1:8080/api/v1/composition/layers/2/clips/4/select' \
+
+  -H 'accept: */*' \
+
+  -d ''
+
+
+
+Load a file :
+
+
+
+curl -X 'POST' \
+
+  'http://127.0.0.1:8080/api/v1/composition/clips/selected/open' \
+
+  -H 'accept: */*' \
+
+  -H 'Content-Type: text/plain' \
+
+  -d 'file:///Users/SH_Work/Downloads/TEST.AVI'
+
+
+
+
+
+서울대 측에서 연락이 왔는데, 저희가 의논했던 내용과 별 차이가 없었습니다.
+
+기본적으로 
+
+- 템플릿 전환, PT 모드, 다른 콘텐츠 선택
+- 재생 스케줄링 기능 
+- 하드웨어 On/Off 스케줄링
+- 대기화면 
+정도가 원하는 내용이어서, 메뉴 구조는 서울대측과 다시 논의가 필요할 것 같습니다.
+
+쇼 컨트롤 쪽의 OSC 커맨드는 Cue number가 6인 경우
+/cue/6/go
+/cue/6/stop
+
+이런 형식이 될 것 같습니다.
+
+
