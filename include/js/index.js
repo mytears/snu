@@ -18,6 +18,9 @@ var m_icon_dy = 2.5; // y축 방향 속도){
 var m_pass_click_cnt = 0;
 var m_pass_timeout;
 let m_curr_pass_txt = "";
+let m_checked_radio = "control1";
+let m_pass_mode = "online";
+let m_main_list = [];
 
 function setInit() {
 
@@ -31,20 +34,141 @@ function setInit() {
         onClickBtnKey(this);
     });
 
+    $(".setting_btn").on("touchstart mousedown", function (e) {
+        e.preventDefault();
+        onClickBtnSetting(this);
+    });
+
+    $(".logout_btn").on("touchstart mousedown", function (e) {
+        e.preventDefault();
+        onClickBtnLogout(this);
+    });
+
+    $(".popup_ok_btn").on("touchstart mousedown", function (e) {
+        e.preventDefault();
+        onClickBtnPopupOk(this);
+    });
+
+    $(".popup_close_btn").on("touchstart mousedown", function (e) {
+        e.preventDefault();
+        onClickBtnPopupClose(this);
+    });
+
+    $(".volume").on("input", function (e) {
+        e.preventDefault();
+        onSliderChange(this);
+    });
+
+    $('.control_radio').on("touchstart mousedown", function () {
+        onClickControlRadio(this);
+    });
+
+    $(".alert_ok_btn").on("touchstart mousedown", function (e) {
+        e.preventDefault();
+        onClickBtnAlertClose(this);
+    });
+
+    $(".alert_close_btn").on("touchstart mousedown", function (e) {
+        e.preventDefault();
+        onClickBtnAlertClose(this);
+    });
+
+    $(".menu_btn").on("touchstart mousedown", function (e) {
+        e.preventDefault();
+        onClickBtnMenu(this);
+    });
+
     m_time_last = new Date().getTime();
     setInterval(setMainInterval, 1000);
     setLoadSetting("include/setting.json");
     setInitFsCommand();
+    //setUpdateSlider();
+}
+
+function onClickBtnMenu(_obj){
+    let t_code = $(_obj).attr("code");
+    $(".menu_btn").removeClass("active");
+    $(_obj).addClass("active");
+}
+
+function onClickBtnAlertClose(_obj) {
+    $(".alert_page").hide();
+}
+
+function onClickBtnPopupOk(_obj) {
+    //console.log(m_checked_radio);
+    $(".popup_page").hide();
+}
+
+function onClickBtnPopupClose(_obj) {
+    $(".popup_page").hide();
+}
+
+function onClickControlRadio(_obj) {
+    var id = $(_obj).attr('id');
+    m_checked_radio = id;
+}
+
+function onClickBtnLogout(_obj) {
+    setMainReset();
+}
+
+function onClickBtnSetting(_obj) {
+    setShowSetting();
+}
+
+function setShowSetting() {
+    if ($('#control2').is(':checked')) {
+        $('#control2').prop('checked', false);
+        $('#control1').prop('checked', true);
+    }
+    m_checked_radio = "control1";
+    $(".popup_page").show();
+}
+
+
+function setLoginResult(_str) {
+    if (_str == "SUCC") {
+        //setUpdateSlider();
+        $(".menu_page").show();
+    }else{
+        setShowAlert("비밀번호가 일치하지 않습니다.");
+        $(".pass_dot").removeClass("active");
+        m_curr_pass_txt = "";
+        setDotsCount();
+    }
+}
+
+function onSliderChange(_obj) {
+    var value = $(_obj).val();
+    var min = $(_obj).attr('min');
+    var max = $(_obj).attr('max');
+    var percentage = Math.round(((value - min) / (max - min)) * 100);
+    $(_obj).css('background', `linear-gradient(to right, #0EAAFB ${percentage}%, #FFFFFF33 ${percentage}%)`);
+    var codeValue = $(_obj).closest('.menu_box').attr('code');
+    var volumeText = $(_obj).closest('.menu_box').find('.menu_volume_txt');
+    volumeText.text(value);
+}
+
+function setUpdateSlider() {
+    let t_vol = $(".volume");
+    t_vol.val(10);
+    t_vol.trigger('input');
 }
 
 function onClickBtnKey(_obj) {
     if ($(_obj).hasClass("back_key")) {
         //console.log("back");
-        if(m_curr_pass_txt.length > 0){
-            m_curr_pass_txt = m_curr_pass_txt.substr(0,m_curr_pass_txt.length-1);
+        if (m_curr_pass_txt.length > 0) {
+            m_curr_pass_txt = m_curr_pass_txt.substr(0, m_curr_pass_txt.length - 1);
         }
     } else if ($(_obj).hasClass("login_key")) {
-        console.log("login");
+        //console.log("login");
+        //setLoginResult("SUCC");
+        setCheckLogin();
+        return;
+    } else if ($(_obj).hasClass("home_key")) {
+        setMainReset();
         return;
     } else {
         //console.log($(_obj).html());
@@ -60,13 +184,73 @@ function onClickBtnKey(_obj) {
             $(this).removeClass("active");
         }
     });
-    console.log(m_curr_pass_txt);
+    //console.log(m_curr_pass_txt);
+}
+
+function setCheckLogin() {
+    if (m_curr_pass_txt.length != 6) {
+        setShowAlert("비밀번호를 모두 입력해주세요.");
+    } else {
+        if(m_pass_mode=="online"){
+            setCheckLoginSend(m_header.url_password);
+        }else{
+            console.log(m_curr_pass_txt);
+            if(m_curr_pass_txt=="000000"){
+                setLoginResult("SUCC");
+            }else{
+                setLoginResult("FAIL");
+            }
+        }
+    }
+}
+
+
+function setCheckLoginSend(_url) {
+    //console.log(_url);
+    const timeout = 5000;
+    const controller = new AbortController();
+    const signal = controller.signal;
+
+    // 타임아웃 설정 (timeout 밀리초 후 요청 취소)
+    const timeoutId = setTimeout(() => {
+        controller.abort(); // 요청 중단
+    }, timeout);
+
+
+    fetch(_url)
+        .then(response => {
+            clearTimeout(timeoutId); // 응답이 오면 타이머 해제
+            return response.json();
+        })
+        .then(data => {
+            let t_code = data.resultcode;
+            if (t_code != undefined && t_code != null) {
+                console.log(t_code);
+                setLoginResult(t_code);
+            }
+        })
+        .catch(error => {
+            if (error.name === "AbortError") {
+                console.error('요청이 타임아웃되었습니다.');
+            } else {
+                console.error('컨텐츠 에러 발생:', error);
+            }
+            setShowAlert("서버가 응답하지 않습니다.");
+            m_pass_mode = "offline";
+            setShowPassPage();
+        });
+}
+
+function setShowAlert(_str) {
+    $(".alert_title").html(_str);
+    $(".alert_page").show();
 }
 
 function onClickBtnPass(_obj) {
     m_pass_click_cnt += 1;
     if (m_pass_click_cnt == 5) {
         setShowPassPage();
+        m_pass_click_cnt = 0;
     } else {
         clearTimeout(m_pass_timeout);
         m_pass_timeout = setTimeout(resetPassCounter, 3000);
@@ -77,7 +261,6 @@ function resetPassCounter() {
     m_pass_click_cnt = 0;
     clearTimeout(m_pass_timeout);
 }
-
 
 function setLoadSetting(_url) {
     $.ajax({
@@ -128,6 +311,7 @@ function setContents() {
         dataType: 'json',
         success: function (data) {
             m_header = data.header;
+            m_main_list = data.main_list;
             setInitSetting();
         },
         error: function (xhr, status, error) {
@@ -149,10 +333,39 @@ function setInitSetting() {
     setHideCover();
     m_icon = $(".icon_obj");
     m_icon_container = $(".main_cont");
-    startAnimation(); // 애니메이션 시작
+    if (m_header.logo_mode == "ani") {
+        startAnimation();
+    } else {
+        var iconWidth = m_icon.width();
+        var iconHeight = m_icon.height();
+        m_icon.css({
+            left: 2160 / 2 - iconWidth / 2,
+            top: 3840 / 2 - iconHeight / 2
+        });
+    }
+    
+    for(var i=0;i<m_main_list.length;i+=1){
+        let menuBox = $(".menu_box").eq(i);
+        let data = m_main_list[i];
+        let vol = Math.round(parseFloat(data.volume)*100);
+        if(vol<0){
+            vol = 0;
+        }else if(vol>100){
+            vol=100;
+        }
+        menuBox.find(".menu_name").text(data.name); // 메뉴 이름 변경
+        menuBox.find(".volume").val(vol); // 슬라이더 값 변경
+        menuBox.find(".menu_volume_txt").text(vol); // 볼륨 텍스트 변경
+        menuBox.find(".volume").trigger("input");
+    }
 }
 
-function setMainReset() {}
+function setMainReset() {
+    $(".menu_page").hide();
+    $(".pass_page").hide();
+    $(".main_page").show();
+    m_pass_mode = "online";
+}
 
 
 
@@ -185,6 +398,11 @@ function startAnimation() {
 }
 
 function setShowPassPage() {
+    if(m_pass_mode=="online"){
+        $(".pass_title").html("비밀번호를 입력해주세요");
+    }else{
+        $(".pass_title").html("오프라인 비밀번호를 입력해주세요");
+    }
     $(".pass_page").show();
     $(".pass_dot").removeClass("active");
     m_curr_pass_txt = "";
