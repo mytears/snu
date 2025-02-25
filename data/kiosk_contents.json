@@ -1,7 +1,8 @@
 {
     "header": {
 		"logo_mode":"noani",
-		"url_password":"data/password.json"
+		"password_url_old":"data/password.json",
+		"password_url":"http://112.221.175.242:9016/cms/api/kiosk_pw.jsp"
     },
     "main_list": [
 		{

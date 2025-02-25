@@ -78,6 +78,16 @@ function setInit() {
         onClickBtnMenu(this);
     });
 
+    $(".menu_btn_b").on("touchstart mousedown", function (e) {
+        e.preventDefault();
+        onClickBtnMenuBig(this);
+    });
+
+    $(".menu_btn_s").on("touchstart mousedown", function (e) {
+        e.preventDefault();
+        onClickBtnMenuSmall(this);
+    });
+
     m_time_last = new Date().getTime();
     setInterval(setMainInterval, 1000);
     setLoadSetting("include/setting.json");
@@ -85,10 +95,55 @@ function setInit() {
     //setUpdateSlider();
 }
 
-function onClickBtnMenu(_obj){
+function onClickBtnMenuBig(_obj) {
     let t_code = $(_obj).attr("code");
-    $(".menu_btn").removeClass("active");
+    let t_num = parseInt(t_code)+1;
+    $(".menu_btn_b").removeClass("active");
     $(_obj).addClass("active");
+    setMenuList(t_num);
+}
+
+function onClickBtnMenuSmall(_obj) {
+    let t_code = $(_obj).attr("code");
+    $(".menu_btn_s").removeClass("active");
+    $(_obj).addClass("active");
+    
+}
+
+function onClickBtnMenu(_obj) {
+    let t_code = $(_obj).attr("code");
+    
+    if($(_obj).hasClass("active")==true){
+        $(".menu_btn").removeClass("active");
+        $(".menu_page_txt").show();
+        $(".menu_list_zone").hide();        
+    }else{
+        $(".menu_btn").removeClass("active");
+        $(_obj).addClass("active");
+        $(".menu_page_txt").hide();
+        $(".menu_list_zone").show();
+        setMenuList(0);
+    }
+}
+
+function setMenuList(_num){
+    $(".menu_btn_s").removeClass("active");
+    $(".menu_bot_box").hide();
+    switch (_num) {
+        case 0:
+            $(".menu_btn_b").removeClass("active");
+            break;
+        case 1:
+            break;
+        case 2:
+            $(".menu_bot_box").show();
+            break;
+        case 3:
+            $(".menu_bot_box[code='0']").show();
+            break;
+        case 4:
+            break;
+    }
 }
 
 function onClickBtnAlertClose(_obj) {
@@ -128,10 +183,14 @@ function setShowSetting() {
 
 
 function setLoginResult(_str) {
-    if (_str == "SUCC") {
-        //setUpdateSlider();
+    if (_str == "SUCC") {        
+        $(".menu_page_txt").show();
+        $(".menu_list_zone").hide();
+        $(".menu_btn_b").removeClass("active");
+        $(".menu_btn_s").removeClass("active");
+        $(".menu_btn").removeClass("active");
         $(".menu_page").show();
-    }else{
+    } else {
         setShowAlert("비밀번호가 일치하지 않습니다.");
         $(".pass_dot").removeClass("active");
         m_curr_pass_txt = "";
@@ -191,13 +250,13 @@ function setCheckLogin() {
     if (m_curr_pass_txt.length != 6) {
         setShowAlert("비밀번호를 모두 입력해주세요.");
     } else {
-        if(m_pass_mode=="online"){
-            setCheckLoginSend(m_header.url_password);
-        }else{
+        if (m_pass_mode == "online") {
+            setCheckLoginSend(m_header.password_url);
+        } else {
             console.log(m_curr_pass_txt);
-            if(m_curr_pass_txt=="000000"){
+            if (m_curr_pass_txt == "000000") {
                 setLoginResult("SUCC");
-            }else{
+            } else {
                 setLoginResult("FAIL");
             }
         }
@@ -206,27 +265,44 @@ function setCheckLogin() {
 
 
 function setCheckLoginSend(_url) {
-    //console.log(_url);
     const timeout = 5000;
     const controller = new AbortController();
     const signal = controller.signal;
+    
+    const params = new URLSearchParams();
 
     // 타임아웃 설정 (timeout 밀리초 후 요청 취소)
     const timeoutId = setTimeout(() => {
         controller.abort(); // 요청 중단
     }, timeout);
 
+    let t_url = _url;
 
-    fetch(_url)
+    if (_url.startsWith("http") == true) {
+        //t_url = _url+"?pw="+m_curr_pass_txt;    
+        params.append('pw', m_curr_pass_txt);
+    }
+
+    console.log(t_url);
+    fetch(t_url, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded'
+            },
+            body: params.toString()
+        })
         .then(response => {
             clearTimeout(timeoutId); // 응답이 오면 타이머 해제
             return response.json();
         })
         .then(data => {
-            let t_code = data.resultcode;
+            console.log(data);
+            let t_code = data.header.code;
             if (t_code != undefined && t_code != null) {
-                console.log(t_code);
+                //console.log(t_code);
                 setLoginResult(t_code);
+                m_main_list = data.list;
+                setDeviceSetting();
             }
         })
         .catch(error => {
@@ -311,7 +387,7 @@ function setContents() {
         dataType: 'json',
         success: function (data) {
             m_header = data.header;
-            m_main_list = data.main_list;
+            //m_main_list = data.main_list;
             setInitSetting();
         },
         error: function (xhr, status, error) {
@@ -330,7 +406,6 @@ function setHideCover() {
 
 //초기화
 function setInitSetting() {
-    setHideCover();
     m_icon = $(".icon_obj");
     m_icon_container = $(".main_cont");
     if (m_header.logo_mode == "ani") {
@@ -344,29 +419,43 @@ function setInitSetting() {
         });
     }
     
-    for(var i=0;i<m_main_list.length;i+=1){
-        let menuBox = $(".menu_box").eq(i);
-        let data = m_main_list[i];
-        let vol = Math.round(parseFloat(data.volume)*100);
-        if(vol<0){
-            vol = 0;
-        }else if(vol>100){
-            vol=100;
-        }
-        menuBox.find(".menu_name").text(data.name); // 메뉴 이름 변경
-        menuBox.find(".volume").val(vol); // 슬라이더 값 변경
-        menuBox.find(".menu_volume_txt").text(vol); // 볼륨 텍스트 변경
-        menuBox.find(".volume").trigger("input");
-    }
+    $(".alert_page").hide();
+    $(".popup_page").hide();
+    $(".menu_page").hide();
+    $(".pass_page").hide();
+    $(".main_page").show();
+    m_pass_mode = "online";
+    
+    setTimeout(function () {
+        setHideCover();
+    }, 500);
 }
 
 function setMainReset() {
+    $(".alert_page").hide();
+    $(".popup_page").hide();
     $(".menu_page").hide();
     $(".pass_page").hide();
     $(".main_page").show();
     m_pass_mode = "online";
 }
 
+function setDeviceSetting() {
+    for (var i = 0; i < m_main_list.length; i += 1) {
+        let menuBox = $(".menu_box").eq(i);
+        let data = m_main_list[i];
+        let vol = parseInt(data.soundLevel);
+        if (vol < 0) {
+            vol = 0;
+        } else if (vol > 100) {
+            vol = 100;
+        }
+        menuBox.find(".menu_name").text(data.areaName); // 메뉴 이름 변경
+        menuBox.find(".volume").val(vol); // 슬라이더 값 변경
+        menuBox.find(".menu_volume_txt").text(vol); // 볼륨 텍스트 변경
+        menuBox.find(".volume").trigger("input");
+    }
+}
 
 
 function moveIcon() {
@@ -398,9 +487,9 @@ function startAnimation() {
 }
 
 function setShowPassPage() {
-    if(m_pass_mode=="online"){
+    if (m_pass_mode == "online") {
         $(".pass_title").html("비밀번호를 입력해주세요");
-    }else{
+    } else {
         $(".pass_title").html("오프라인 비밀번호를 입력해주세요");
     }
     $(".pass_page").show();
