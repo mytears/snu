@@ -1,33 +1,22 @@
 {
     "header": {
-		"logo_mode":"noani",
-		"password_url_old":"data/password.json",
-		"password_url":"http://112.221.175.242:9016/cms/api/kiosk_pw.jsp"
+        "logo_mode": "noani",
+        "password_url_old": "data/password.json",
+        "password_url": "http://112.221.175.242:9016/cms/api/kiosk_pw.jsp",
+        "cmd_line": "|"
     },
-    "main_list": [
-		{
-			"id":"0",
-			"number":"1",
-			"name":"뉴박스",
-			"volume":"0.3"
-		},
-		{
-			"id":"1",
-			"number":"2",
-			"name":"케이브1"	,
-			"volume":"0.6"	
-		},
-		{
-			"id":"2",
-			"number":"3",
-			"name":"케이브2"	,
-			"volume":"1"	
-		},
-		{
-			"id":"3",
-			"number":"4",
-			"name":"옥외",
-			"volume":"0"		
-		}
+    "osc_cmd_list": [
+        {
+            "type":"volume",
+            "cmd_name": "volume"
+        },
+        {
+            "type":"power",
+            "cmd_name": "volume"
+        },
+        {
+            "type":"play",
+            "cmd_name": "play"
+        }
 	]
 }

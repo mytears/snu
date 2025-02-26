@@ -18,9 +18,11 @@ var m_icon_dy = 2.5; // y축 방향 속도){
 var m_pass_click_cnt = 0;
 var m_pass_timeout;
 let m_curr_pass_txt = "";
-let m_checked_radio = "control1";
+let m_checked_radio = "ON";
 let m_pass_mode = "online";
 let m_main_list = [];
+let m_main_header = null;
+let m_device_code = "";
 
 function setInit() {
 
@@ -56,7 +58,12 @@ function setInit() {
 
     $(".volume").on("input", function (e) {
         e.preventDefault();
-        onSliderChange(this);
+        onVolumeSlide(this);
+    });
+
+    $(".volume").on("change", function (e) {
+        e.preventDefault();
+        onVolumeChange(this);
     });
 
     $('.control_radio').on("touchstart mousedown", function () {
@@ -97,7 +104,7 @@ function setInit() {
 
 function onClickBtnMenuBig(_obj) {
     let t_code = $(_obj).attr("code");
-    let t_num = parseInt(t_code)+1;
+    let t_num = parseInt(t_code) + 1;
     $(".menu_btn_b").removeClass("active");
     $(_obj).addClass("active");
     setMenuList(t_num);
@@ -107,17 +114,18 @@ function onClickBtnMenuSmall(_obj) {
     let t_code = $(_obj).attr("code");
     $(".menu_btn_s").removeClass("active");
     $(_obj).addClass("active");
-    
+
 }
 
 function onClickBtnMenu(_obj) {
     let t_code = $(_obj).attr("code");
+    m_device_code = t_code;
     
-    if($(_obj).hasClass("active")==true){
+    if ($(_obj).hasClass("active") == true) {
         $(".menu_btn").removeClass("active");
         $(".menu_page_txt").show();
-        $(".menu_list_zone").hide();        
-    }else{
+        $(".menu_list_zone").hide();
+    } else {
         $(".menu_btn").removeClass("active");
         $(_obj).addClass("active");
         $(".menu_page_txt").hide();
@@ -126,7 +134,7 @@ function onClickBtnMenu(_obj) {
     }
 }
 
-function setMenuList(_num){
+function setMenuList(_num) {
     $(".menu_btn_s").removeClass("active");
     $(".menu_bot_box").hide();
     switch (_num) {
@@ -134,6 +142,7 @@ function setMenuList(_num){
             $(".menu_btn_b").removeClass("active");
             break;
         case 1:
+            setCmd("play", m_device_code+m_header.cmd_line+_num);
             break;
         case 2:
             $(".menu_bot_box").show();
@@ -142,6 +151,7 @@ function setMenuList(_num){
             $(".menu_bot_box[code='0']").show();
             break;
         case 4:
+            setCmd("play", m_device_code+m_header.cmd_line+_num);
             break;
     }
 }
@@ -151,8 +161,9 @@ function onClickBtnAlertClose(_obj) {
 }
 
 function onClickBtnPopupOk(_obj) {
-    //console.log(m_checked_radio);
-    $(".popup_page").hide();
+    console.log(m_checked_radio);
+    sendPowerInfo(m_main_header.powerControlUrl, m_checked_radio);
+    //$(".popup_page").hide();
 }
 
 function onClickBtnPopupClose(_obj) {
@@ -161,7 +172,8 @@ function onClickBtnPopupClose(_obj) {
 
 function onClickControlRadio(_obj) {
     var id = $(_obj).attr('id');
-    m_checked_radio = id;
+    var code = $(_obj).attr('code');
+    m_checked_radio = code;
 }
 
 function onClickBtnLogout(_obj) {
@@ -177,13 +189,13 @@ function setShowSetting() {
         $('#control2').prop('checked', false);
         $('#control1').prop('checked', true);
     }
-    m_checked_radio = "control1";
+    m_checked_radio = "ON";
     $(".popup_page").show();
 }
 
 
 function setLoginResult(_str) {
-    if (_str == "SUCC") {        
+    if (_str == "SUCC") {
         $(".menu_page_txt").show();
         $(".menu_list_zone").hide();
         $(".menu_btn_b").removeClass("active");
@@ -198,7 +210,28 @@ function setLoginResult(_str) {
     }
 }
 
-function onSliderChange(_obj) {
+function setCmd(_type, _str){
+    let t_cmd = "";
+    for(var i=0;i<m_cmd_list.length;i+=1){
+        if(m_cmd_list[i].type == _type){
+            t_cmd = m_cmd_list[i].cmd_name + m_header.cmd_line + _str;
+            break;
+        }
+    }
+    setCallWebToApp('OSC_SEND', t_cmd);
+}
+
+function onVolumeChange(_obj) {
+    var value = $(_obj).val();
+    var codeValue = $(_obj).closest('.menu_box').attr('code');
+    //console.log("code", codeValue, "value", value);
+    let t_cmd = codeValue + m_header.cmd_line + value;
+
+    setCmd("volume", t_cmd);
+    sendVolumeInfo(m_main_header.soundSaveUrl, codeValue, value);
+}
+
+function onVolumeSlide(_obj) {
     var value = $(_obj).val();
     var min = $(_obj).attr('min');
     var max = $(_obj).attr('max');
@@ -251,7 +284,7 @@ function setCheckLogin() {
         setShowAlert("비밀번호를 모두 입력해주세요.");
     } else {
         if (m_pass_mode == "online") {
-            setCheckLoginSend(m_header.password_url);
+            sendLoginInfo(m_header.password_url);
         } else {
             console.log(m_curr_pass_txt);
             if (m_curr_pass_txt == "000000") {
@@ -264,11 +297,114 @@ function setCheckLogin() {
 }
 
 
-function setCheckLoginSend(_url) {
+
+function sendPowerInfo(_url, _code) {
     const timeout = 5000;
     const controller = new AbortController();
     const signal = controller.signal;
-    
+
+    const params = new URLSearchParams();
+
+    // 타임아웃 설정 (timeout 밀리초 후 요청 취소)
+    const timeoutId = setTimeout(() => {
+        controller.abort(); // 요청 중단
+    }, timeout);
+
+    let t_url = _url;
+
+    if (_url.startsWith("http") == true) {
+        params.append('power', _code);
+    }
+
+    //console.log(t_url);
+    fetch(t_url, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded'
+            },
+            body: params.toString()
+        })
+        .then(response => {
+            clearTimeout(timeoutId); // 응답이 오면 타이머 해제
+            return response.json();
+        })
+        .then(data => {
+            //console.log(data);
+            let t_code = data.resultcode;
+            if (t_code != undefined && t_code != null) {
+                if (t_code == "SUCC") {
+                    //setShowAlert("볼륨 저장을 완료하였습니다.");
+                } else {
+                    setShowAlert("정보전달에 실패하였습니다.");
+                }
+            }
+        })
+        .catch(error => {
+            if (error.name === "AbortError") {
+                console.error('요청이 타임아웃되었습니다.');
+            } else {
+                console.error('컨텐츠 에러 발생:', error);
+            }
+            setShowAlert("서버가 응답하지 않습니다.");
+        });
+}
+
+function sendVolumeInfo(_url, _code, _vol) {
+    const timeout = 5000;
+    const controller = new AbortController();
+
+    const params = new URLSearchParams();
+
+    // 타임아웃 설정 (timeout 밀리초 후 요청 취소)
+    const timeoutId = setTimeout(() => {
+        controller.abort(); // 요청 중단
+    }, timeout);
+
+    let t_url = _url;
+
+    if (_url.startsWith("http") == true) {
+        //t_url = _url+"?pw="+m_curr_pass_txt;    
+        params.append('code', m_main_list[parseInt(_code)].areaCode);
+        params.append('volume', _vol);
+    }
+
+    //console.log(t_url);
+    fetch(t_url, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded'
+            },
+            body: params.toString()
+        })
+        .then(response => {
+            clearTimeout(timeoutId); // 응답이 오면 타이머 해제
+            return response.json();
+        })
+        .then(data => {
+            //console.log(data);
+            let t_code = data.resultcode;
+            if (t_code != undefined && t_code != null) {
+                if (t_code == "SUCC") {
+                    setShowAlert("볼륨 저장을 완료하였습니다.");
+                } else {
+                    setShowAlert("볼륨 저장에 실패하였습니다.");
+                }
+            }
+        })
+        .catch(error => {
+            if (error.name === "AbortError") {
+                console.error('요청이 타임아웃되었습니다.');
+            } else {
+                console.error('컨텐츠 에러 발생:', error);
+            }
+            setShowAlert("서버가 응답하지 않습니다.");
+        });
+}
+
+function sendLoginInfo(_url) {
+    const timeout = 5000;
+    const controller = new AbortController();
+
     const params = new URLSearchParams();
 
     // 타임아웃 설정 (timeout 밀리초 후 요청 취소)
@@ -283,7 +419,7 @@ function setCheckLoginSend(_url) {
         params.append('pw', m_curr_pass_txt);
     }
 
-    console.log(t_url);
+    //console.log(t_url);
     fetch(t_url, {
             method: 'POST',
             headers: {
@@ -296,11 +432,12 @@ function setCheckLoginSend(_url) {
             return response.json();
         })
         .then(data => {
-            console.log(data);
+            //console.log(data);
             let t_code = data.header.code;
             if (t_code != undefined && t_code != null) {
                 //console.log(t_code);
                 setLoginResult(t_code);
+                m_main_header = data.header;
                 m_main_list = data.list;
                 setDeviceSetting();
             }
@@ -387,7 +524,7 @@ function setContents() {
         dataType: 'json',
         success: function (data) {
             m_header = data.header;
-            //m_main_list = data.main_list;
+            m_cmd_list = data.osc_cmd_list;
             setInitSetting();
         },
         error: function (xhr, status, error) {
@@ -418,14 +555,14 @@ function setInitSetting() {
             top: 3840 / 2 - iconHeight / 2
         });
     }
-    
+
     $(".alert_page").hide();
     $(".popup_page").hide();
     $(".menu_page").hide();
     $(".pass_page").hide();
     $(".main_page").show();
     m_pass_mode = "online";
-    
+
     setTimeout(function () {
         setHideCover();
     }, 500);
