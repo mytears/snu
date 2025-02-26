@@ -23,6 +23,8 @@ let m_pass_mode = "online";
 let m_main_list = [];
 let m_main_header = null;
 let m_device_code = "";
+let m_cate_code = "";
+let m_contents_code = "";
 
 function setInit() {
 
@@ -104,6 +106,7 @@ function setInit() {
 
 function onClickBtnMenuBig(_obj) {
     let t_code = $(_obj).attr("code");
+    m_cate_code = t_code;
     let t_num = parseInt(t_code) + 1;
     $(".menu_btn_b").removeClass("active");
     $(_obj).addClass("active");
@@ -112,13 +115,16 @@ function onClickBtnMenuBig(_obj) {
 
 function onClickBtnMenuSmall(_obj) {
     let t_code = $(_obj).attr("code");
+    let t_group = $(_obj).closest('.menu_bot_box').attr('code');
     $(".menu_btn_s").removeClass("active");
     $(_obj).addClass("active");
+    setCmd("play", m_device_code+m_header.cmd_line+m_cate_code+m_header.cmd_line+t_group+m_header.cmd_line+t_code);
 
 }
 
 function onClickBtnMenu(_obj) {
-    let t_code = $(_obj).attr("code");
+    //let t_code = $(_obj).attr("code");
+    let t_code = $(_obj).closest('.menu_box').attr('code');
     m_device_code = t_code;
     
     if ($(_obj).hasClass("active") == true) {
@@ -142,7 +148,7 @@ function setMenuList(_num) {
             $(".menu_btn_b").removeClass("active");
             break;
         case 1:
-            setCmd("play", m_device_code+m_header.cmd_line+_num);
+            setCmd("play", m_device_code+m_header.cmd_line+(_num-1));
             break;
         case 2:
             $(".menu_bot_box").show();
@@ -151,7 +157,7 @@ function setMenuList(_num) {
             $(".menu_bot_box[code='0']").show();
             break;
         case 4:
-            setCmd("play", m_device_code+m_header.cmd_line+_num);
+            setCmd("play", m_device_code+m_header.cmd_line+(_num-1));
             break;
     }
 }
