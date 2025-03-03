@@ -27,6 +27,7 @@ let m_cate_code = "";
 let m_contents_code = "";
 let m_device_list = [];
 let m_cmd_list = [];
+let m_is_first_page = true;
 
 function setInit() {
 
@@ -97,6 +98,11 @@ function setInit() {
     $(".menu_btn_s").on("touchstart mousedown", function (e) {
         e.preventDefault();
         onClickBtnMenuSmall(this);
+    });
+
+    $("html").on("touchstart mousedown", function (e) {
+        e.preventDefault();
+        setTouched();
     });
 
     m_time_last = new Date().getTime();
@@ -536,8 +542,10 @@ function setMainInterval() {
 
     time_gap = time_curr - m_time_last;
     time_gap = Math.floor(time_gap / 1000);
-    if (time_gap > 180) {
-        if ($(".page_00").css("display") == "none") {
+    //console.log("time_gap", time_gap);
+    if (time_gap >= 90) {
+        m_time_last = new Date().getTime();
+        if (m_is_first_page == false) {
             setMainReset();
         }
     }
@@ -608,6 +616,7 @@ function setInitSetting() {
 }
 
 function setMainReset() {
+    console.log("setMainReset");
     $(".loading_cover").hide();
     $(".alert_page").hide();
     $(".popup_page").hide();
@@ -615,6 +624,7 @@ function setMainReset() {
     $(".pass_page").hide();
     $(".main_page").show();
     m_pass_mode = "online";
+    m_is_first_page = true;
 }
 
 function setDeviceAllVolumeSetting() {
@@ -785,8 +795,8 @@ function setShowPassPage() {
     $(".pass_page").show();
     $(".pass_dot").removeClass("active");
     m_curr_pass_txt = "";
+    m_is_first_page = false;
     setDotsCount();
-
 }
 
 function setDotsCount() {
@@ -1094,6 +1104,7 @@ function onClickHomeBtn(_obj) {
 
     //setMainReset();
     setPage("10");
+    m_is_first_page = false;
 }
 
 function onClickPopupBtn(_obj) {
