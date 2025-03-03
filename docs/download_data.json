@@ -1,0 +1,33 @@
+{
+  "header": {
+    "code": "SUCC",
+    "base_path": "C://temp_download//content",
+    "completeUrl": "http://112.221.175.242:9016/cms/api/complete_check.jsp"
+  },
+  "list": [
+    {
+      "file_url": "http://112.221.175.242:9016/cms/datafiles/did/20250216/D_0000000005_MAIN.mp4",
+      "upd_date": "20250216005507",
+      "file_name": "D_0000000005_MAIN.mp4",
+      "file_size": "20747265"
+    },
+    {
+      "file_url": "http://112.221.175.242:9016/cms/datafiles/did/20250216/D_0000000004_MAIN.mp4",
+      "upd_date": "20250216005419",
+      "file_name": "D_0000000004_MAIN.mp4",
+      "file_size": "14117413"
+    },
+    {
+      "file_url": "http://112.221.175.242:9016/cms/datafiles/did/20250216/D_0000000003_MAIN.mp4",
+      "upd_date": "20250216005440",
+      "file_name": "D_0000000003_MAIN.mp4",
+      "file_size": "12625796"
+    },
+    {
+      "file_url": "http://112.221.175.242:9016/cms/datafiles/did/20250216/D_0000000002_MAIN.mp4",
+      "upd_date": "20250216005352",
+      "file_name": "D_0000000002_MAIN.mp4",
+      "file_size": "9084073"
+    }
+  ]
+}

@@ -25,6 +25,8 @@ let m_main_header = null;
 let m_device_code = "";
 let m_cate_code = "";
 let m_contents_code = "";
+let m_device_list = [];
+let m_cmd_list = [];
 
 function setInit() {
 
@@ -118,7 +120,12 @@ function onClickBtnMenuSmall(_obj) {
     let t_group = $(_obj).closest('.menu_bot_box').attr('code');
     $(".menu_btn_s").removeClass("active");
     $(_obj).addClass("active");
-    setCmd("play", m_device_code+m_header.cmd_line+m_cate_code+m_header.cmd_line+t_group+m_header.cmd_line+t_code);
+    if (t_group == "1") {
+        t_code = parseInt(t_code) + 5;
+    }
+    //let t_cmd = "/composition/layers/"+(parseInt(m_device_code)+1)+"/clips/"+m_header.cmd_line + m_cate_code+"/connect 1";
+    //setCallWebToApp('OSC_SEND', t_cmd);
+    setCmd("play", (parseInt(m_device_code) + 1) + m_header.cmd_line + (parseInt(m_cate_code) + 1) + m_header.cmd_line + (parseInt(t_code) + 1));
 
 }
 
@@ -126,7 +133,7 @@ function onClickBtnMenu(_obj) {
     //let t_code = $(_obj).attr("code");
     let t_code = $(_obj).closest('.menu_box').attr('code');
     m_device_code = t_code;
-    
+
     if ($(_obj).hasClass("active") == true) {
         $(".menu_btn").removeClass("active");
         $(".menu_page_txt").show();
@@ -143,12 +150,15 @@ function onClickBtnMenu(_obj) {
 function setMenuList(_num) {
     $(".menu_btn_s").removeClass("active");
     $(".menu_bot_box").hide();
+    t_cmd = "";
     switch (_num) {
         case 0:
             $(".menu_btn_b").removeClass("active");
             break;
         case 1:
-            setCmd("play", m_device_code+m_header.cmd_line+(_num-1));
+            setCmd("play", (parseInt(m_device_code) + 1) + m_header.cmd_line + _num + m_header.cmd_line + "1");
+            //t_cmd = "/composition/layers/"+(parseInt(m_device_code)+1)+"/clips/"+ _num +"/connect 1";
+            //setCallWebToApp('OSC_SEND', t_cmd);
             break;
         case 2:
             $(".menu_bot_box").show();
@@ -157,7 +167,9 @@ function setMenuList(_num) {
             $(".menu_bot_box[code='0']").show();
             break;
         case 4:
-            setCmd("play", m_device_code+m_header.cmd_line+(_num-1));
+            setCmd("play", (parseInt(m_device_code) + 1) + m_header.cmd_line + _num + m_header.cmd_line + "1");
+            //t_cmd = "/composition/layers/"+(parseInt(m_device_code)+1)+"/clips/"+ _num +"/connect 1";
+            //setCallWebToApp('OSC_SEND', t_cmd);
             break;
     }
 }
@@ -216,10 +228,10 @@ function setLoginResult(_str) {
     }
 }
 
-function setCmd(_type, _str){
+function setCmd(_type, _str) {
     let t_cmd = "";
-    for(var i=0;i<m_cmd_list.length;i+=1){
-        if(m_cmd_list[i].type == _type){
+    for (var i = 0; i < m_cmd_list.length; i += 1) {
+        if (m_cmd_list[i].type == _type) {
             t_cmd = m_cmd_list[i].cmd_name + m_header.cmd_line + _str;
             break;
         }
@@ -231,10 +243,14 @@ function onVolumeChange(_obj) {
     var value = $(_obj).val();
     var codeValue = $(_obj).closest('.menu_box').attr('code');
     //console.log("code", codeValue, "value", value);
-    let t_cmd = codeValue + m_header.cmd_line + value;
-
+    let t_cmd = (parseInt(codeValue) + 1) + m_header.cmd_line + (parseInt(value) / 100);
     setCmd("volume", t_cmd);
+    //let t_cmd = "/composition/layers/"+(parseInt(codeValue)+1)+"/audio/volume " + (parseInt(value)/100);
+    //setCallWebToApp('OSC_SEND', t_cmd);
+
     sendVolumeInfo(m_main_header.soundSaveUrl, codeValue, value);
+
+
 }
 
 function onVolumeSlide(_obj) {
@@ -305,7 +321,7 @@ function setCheckLogin() {
 
 
 function sendPowerInfo(_url, _code) {
-    const timeout = 5000;
+    const timeout = 20000;
     const controller = new AbortController();
     const signal = controller.signal;
 
@@ -321,31 +337,37 @@ function sendPowerInfo(_url, _code) {
     if (_url.startsWith("http") == true) {
         params.append('power', _code);
     }
-
-    //console.log(t_url);
+    $(".loading_cover").show();
+    console.log(t_url);
     fetch(t_url, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/x-www-form-urlencoded'
             },
-            body: params.toString()
+            body: params.toString(),
+            signal: signal // signal 추가
         })
         .then(response => {
             clearTimeout(timeoutId); // 응답이 오면 타이머 해제
             return response.json();
         })
         .then(data => {
-            //console.log(data);
+            $(".loading_cover").hide();
+            $(".popup_page").hide();
+            console.log(data);
             let t_code = data.resultcode;
             if (t_code != undefined && t_code != null) {
                 if (t_code == "SUCC") {
-                    //setShowAlert("볼륨 저장을 완료하였습니다.");
+                    setShowAlert("전원 신호 전달을 완료하였습니다.");
+                    setDeviceAllPowerSetting(_code);
                 } else {
-                    setShowAlert("정보전달에 실패하였습니다.");
+                    setShowAlert("전원 신호 전달에 실패하였습니다.");
                 }
             }
         })
         .catch(error => {
+            $(".loading_cover").hide();
+            $(".popup_page").hide();
             if (error.name === "AbortError") {
                 console.error('요청이 타임아웃되었습니다.');
             } else {
@@ -358,6 +380,7 @@ function sendPowerInfo(_url, _code) {
 function sendVolumeInfo(_url, _code, _vol) {
     const timeout = 5000;
     const controller = new AbortController();
+    const signal = controller.signal;
 
     const params = new URLSearchParams();
 
@@ -374,30 +397,34 @@ function sendVolumeInfo(_url, _code, _vol) {
         params.append('volume', _vol);
     }
 
-    //console.log(t_url);
+    $(".loading_cover").show();
+    console.log(t_url);
     fetch(t_url, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/x-www-form-urlencoded'
             },
-            body: params.toString()
+            body: params.toString(),
+            signal: signal // signal 추가
         })
         .then(response => {
             clearTimeout(timeoutId); // 응답이 오면 타이머 해제
             return response.json();
         })
         .then(data => {
+            $(".loading_cover").hide();
             //console.log(data);
             let t_code = data.resultcode;
             if (t_code != undefined && t_code != null) {
                 if (t_code == "SUCC") {
-                    setShowAlert("볼륨 저장을 완료하였습니다.");
+                    //setShowAlert("볼륨 저장을 완료하였습니다.");
                 } else {
                     setShowAlert("볼륨 저장에 실패하였습니다.");
                 }
             }
         })
-        .catch(error => {
+        .catch(error => {        
+            $(".loading_cover").hide();
             if (error.name === "AbortError") {
                 console.error('요청이 타임아웃되었습니다.');
             } else {
@@ -410,6 +437,7 @@ function sendVolumeInfo(_url, _code, _vol) {
 function sendLoginInfo(_url) {
     const timeout = 5000;
     const controller = new AbortController();
+    const signal = controller.signal;
 
     const params = new URLSearchParams();
 
@@ -425,19 +453,22 @@ function sendLoginInfo(_url) {
         params.append('pw', m_curr_pass_txt);
     }
 
+    $(".loading_cover").show();
     //console.log(t_url);
     fetch(t_url, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/x-www-form-urlencoded'
             },
-            body: params.toString()
+            body: params.toString(),
+            signal: signal // signal 추가
         })
         .then(response => {
             clearTimeout(timeoutId); // 응답이 오면 타이머 해제
             return response.json();
         })
         .then(data => {
+            $(".loading_cover").hide();
             //console.log(data);
             let t_code = data.header.code;
             if (t_code != undefined && t_code != null) {
@@ -445,10 +476,11 @@ function sendLoginInfo(_url) {
                 setLoginResult(t_code);
                 m_main_header = data.header;
                 m_main_list = data.list;
-                setDeviceSetting();
+                setDeviceAllVolumeSetting();
             }
         })
         .catch(error => {
+            $(".loading_cover").hide();
             if (error.name === "AbortError") {
                 console.error('요청이 타임아웃되었습니다.');
             } else {
@@ -531,6 +563,7 @@ function setContents() {
         success: function (data) {
             m_header = data.header;
             m_cmd_list = data.osc_cmd_list;
+            m_device_list = data.device_list;
             setInitSetting();
         },
         error: function (xhr, status, error) {
@@ -575,6 +608,7 @@ function setInitSetting() {
 }
 
 function setMainReset() {
+    $(".loading_cover").hide();
     $(".alert_page").hide();
     $(".popup_page").hide();
     $(".menu_page").hide();
@@ -583,7 +617,7 @@ function setMainReset() {
     m_pass_mode = "online";
 }
 
-function setDeviceSetting() {
+function setDeviceAllVolumeSetting() {
     for (var i = 0; i < m_main_list.length; i += 1) {
         let menuBox = $(".menu_box").eq(i);
         let data = m_main_list[i];
@@ -597,9 +631,122 @@ function setDeviceSetting() {
         menuBox.find(".volume").val(vol); // 슬라이더 값 변경
         menuBox.find(".menu_volume_txt").text(vol); // 볼륨 텍스트 변경
         menuBox.find(".volume").trigger("input");
+
+        //let t_cmd = "/composition/layers/"+(i+1)+"/audio/volume " + (vol/100);
+        //setCallWebToApp('OSC_SEND', t_cmd);
+        setCmd("volume", (i + 1) + m_header.cmd_line + (vol / 100));
     }
 }
 
+function setDevicelVolumeSetting(_name, _vol) {
+
+    let data = null;
+    let vol = 0;
+    let t_num = -1;
+    if (m_main_list.length == 0) {
+        for (var i = 0; i < m_device_list.length; i += 1) {
+            if (m_device_list[i].areaCode == _name) {
+                data = m_device_list[i];
+                t_num = i;
+                break;
+            }
+        }
+    } else {
+        for (var i = 0; i < m_main_list.length; i += 1) {
+            if (m_main_list[i].areaCode == _name) {
+                data = m_main_list[i];
+                t_num = i;
+                break;
+            }
+        }
+    }
+
+    if (t_num == -1) {
+        return;
+    }
+
+    let menuBox = $(".menu_box").eq(t_num);
+
+    vol = parseInt(_vol);
+
+    if (vol < 0) {
+        vol = 0;
+    } else if (vol > 100) {
+        vol = 100;
+    }
+
+    menuBox.find(".menu_name").text(data.areaName); // 메뉴 이름 변경
+    menuBox.find(".volume").val(vol); // 슬라이더 값 변경
+    menuBox.find(".menu_volume_txt").text(vol); // 볼륨 텍스트 변경
+    menuBox.find(".volume").trigger("input");
+
+
+    setCmd("volume", (t_num + 1) + m_header.cmd_line + (vol / 100));
+}
+
+function setDeviceAllPowerSetting(_cmd) {
+    let t_cmd = "";
+    if(_cmd == "OFF"){
+        t_cmd = "power_off";
+    }else if(_cmd == "ON"){
+        t_cmd = "power_on";
+    }
+    if(t_cmd==""){
+        return;
+    }
+    if (m_main_list.length == 0) {
+        for (var i = 0; i < m_device_list.length; i += 1) {
+            setCmd(t_cmd, (i + 1));
+        }
+    } else {
+        for (var i = 0; i < m_main_list.length; i += 1) {
+            setCmd(t_cmd, (i + 1));
+        }
+    }
+}
+
+function setDevicelPowerSetting(_cmd, _name, _vol) {
+    let data = null;
+    let vol = 0;
+    let t_num = -1;
+    if (m_main_list.length == 0) {
+        for (var i = 0; i < m_device_list.length; i += 1) {
+            if (m_device_list[i].areaCode == _name) {
+                data = m_device_list[i];
+                t_num = i;
+                break;
+            }
+        }
+    } else {
+        for (var i = 0; i < m_main_list.length; i += 1) {
+            if (m_main_list[i].areaCode == _name) {
+                data = m_main_list[i];
+                t_num = i;
+                break;
+            }
+        }
+    }
+
+    if (t_num == -1) {
+        return;
+    }
+
+    if (_cmd == "ON") {
+        //setCmd("power", t_str);
+        //setCmd("volmue", t_str);
+        setCmd("power_on", (t_num + 1));
+        setDevicelVolumeSetting(_name, _vol);
+
+        //let t_cmd = "/composition/layers/"+(t_num+1)+"/audio/volume " + (parseInt(_vol)/100);
+        //setCallWebToApp('OSC_SEND', t_cmd);
+
+        //let t_cmd = "/composition/layers/" + (t_num + 1) + "/audio/volume " + (parseInt(_vol) / 100);
+        //setCallWebToApp('OSC_SEND', t_cmd);
+    } else {
+        //setCmd("power", t_str);
+        setCmd("power_off", (t_num + 1));
+    }
+}
 
 function moveIcon() {
     var iconPos = m_icon.position();
@@ -1261,9 +1408,24 @@ function setQrCode(_id, _url) {
 function setInitFsCommand() {
     if (window.chrome.webview) {
         window.chrome.webview.addEventListener('message', (arg) => {
-            console.log(arg.data);
+            //console.log(arg.data);
             setCommand(arg.data);
         });
+    }
+}
+
+function setCommand(_data) {
+    console.log("setCommand", _data);
+    const parts = _data.trim().split('|');
+    // 첫 번째 값이 "S"이고 마지막 값이 "E"인지 확인
+    if (parts[0] !== "S" || parts[parts.length - 1] !== "E") {
+        console.log(`[Invalid] ${_data} - Incorrect start or end.`);
+        return null;
+    }
+    if (parts[1] == "SOUND") {
+        setDevicelVolumeSetting(parts[2], parts[3]);
+    } else if (parts[1] == "ON" || parts[1] == "OFF") {
+        setDevicelPowerSetting(parts[1], parts[2], parts[3]);
     }
 }
 
