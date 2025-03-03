@@ -5,18 +5,36 @@
         "password_url": "http://112.221.175.242:9016/cms/api/kiosk_pw.jsp",
         "cmd_line": "|"
     },
+	"device_list":[
+		{
+		  "areaCode": "H001KIO"
+		},
+		{
+		  "areaCode": "H002KIO"
+		},
+		{
+		  "areaCode": "H003KIO"
+		},
+		{
+		  "areaCode": "H004KIO"
+		}	
+	],
     "osc_cmd_list": [
         {
             "type":"volume",
-            "cmd_name": "volume"
+            "cmd_name": "VOL"
         },
         {
-            "type":"power",
-            "cmd_name": "volume"
+            "type":"power_on",
+            "cmd_name": "ON"
+        },
+        {
+            "type":"power_off",
+            "cmd_name": "OFF"
         },
         {
             "type":"play",
-            "cmd_name": "play"
+            "cmd_name": "PLAY"
         }
 	]
 }
