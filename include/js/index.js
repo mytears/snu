@@ -149,7 +149,7 @@ function onClickBtnMenuSmall(_obj) {
     $(".menu_btn_s").removeClass("active");
     $(_obj).addClass("active");
 
-    console.log(m_device_code, m_big_button_num, t_code);
+    //console.log(m_device_code, m_big_button_num, t_code);
 
     //m_osc_number_list
     let chk_num = 0;
@@ -195,6 +195,7 @@ function onClickBtnMenu(_obj) {
 
 function setMenuList(_num) {
     let t_cmd = "";
+    let t_cue ="";
     $(".menu_btn_s").removeClass("active");
     $(".menu_bot_box").hide();
     t_cmd = "";
@@ -204,6 +205,9 @@ function setMenuList(_num) {
             $(".menu_btn_b").removeClass("active");
             break;
         case 1:
+            t_chk = parseInt(m_osc_number_list.cmd_start);
+            t_cue = convCue(m_device_code, t_chk);
+            setCmd(t_cue);
             $(".menu_bot_box[code='2']").show();
             break;
         case 2:
@@ -220,7 +224,7 @@ function setMenuList(_num) {
             break;
         case 4:
             let chk_num = parseInt(m_osc_number_list.cmd_4);
-            let t_cue = convCue(m_device_code, chk_num);
+            t_cue = convCue(m_device_code, chk_num);
             setCmd(t_cue);
             break;
     }
@@ -738,9 +742,9 @@ function setDeviceAllPowerSetting(_cmd) {
     let t_cmd = "";
     let t_chk = "";
     if (_cmd == "OFF") {
-        t_chk = parseInt(osc_number_list.cmd_stop);
+        t_chk = parseInt(m_osc_number_list.cmd_stop);
     } else if (_cmd == "ON") {
-        t_chk = parseInt(osc_number_list.cmd_start);
+        t_chk = parseInt(m_osc_number_list.cmd_start);
     }
     // /cue/{큐번호}/start
     if (_cmd == "") {
@@ -790,9 +794,9 @@ function setDevicelPowerSetting(_cmd, _name, _vol) {
 
 
     if (_cmd == "OFF") {
-        t_chk = parseInt(osc_number_list.cmd_stop);
+        t_chk = parseInt(m_osc_number_list.cmd_stop);
     } else if (_cmd == "ON") {
-        t_chk = parseInt(osc_number_list.cmd_start);
+        t_chk = parseInt(m_osc_number_list.cmd_start);
         setDevicelVolumeSetting(_name, _vol);
     }
     let t_cue = convCue(t_num, t_chk);
