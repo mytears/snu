@@ -355,6 +355,7 @@
 .menu_top_zone {
     display: flex;
     justify-content: center;
+    width: 1700px;
 }
 
 
@@ -382,6 +383,10 @@
     color: #2B44B3;
 }
 
+.menu_btn_b.disabled {
+    opacity:0.5;
+}
+
 
 .menu_bot_zone {
     display: flex;
@@ -393,6 +398,12 @@
 
 .menu_bot_box{
     margin-bottom: 100px;
+    width: 1600px;
+}
+
+.box_btns_big{
+    display: flex;
+    flex-wrap: wrap;
 }
 
 .box_title{
@@ -402,6 +413,7 @@
 .box_btns {
     display: flex;
     margin-top: 25px;
+    width: 1600px;
 }
 
 .menu_btn_s {
@@ -415,6 +427,7 @@
     justify-content: center;
     align-items: center;
     margin-right: 24px;
+    margin-bottom: 24px;
     font-weight: 700;
 }
 
