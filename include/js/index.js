@@ -205,7 +205,7 @@ function setMenuList(_num) {
             $(".menu_btn_b").removeClass("active");
             break;
         case 1:
-            t_chk = parseInt(m_osc_number_list.cmd_start);
+            t_chk = parseInt(m_osc_number_list.cmd_start)+1;
             t_cue = convCue(m_device_code, t_chk);
             setCmd(t_cue);
             $(".menu_bot_box[code='2']").show();
@@ -583,9 +583,10 @@ function setLoadSetting(_url) {
 
 //메인 타이머
 function setMainInterval() {
+    /*
     var time_gap = 0;
     var time_curr = new Date().getTime();
-
+    
     time_gap = time_curr - m_time_last;
     time_gap = Math.floor(time_gap / 1000);
     //console.log("time_gap", time_gap);
@@ -595,6 +596,7 @@ function setMainInterval() {
             setMainReset();
         }
     }
+    */
 
     m_status_time_chk += 1;
     if (m_status_time_chk > 60) {
