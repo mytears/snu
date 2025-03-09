@@ -132,7 +132,7 @@ function setInit() {
 }
 
 function onClickBtnMenuBig(_obj) {
-    if($(_obj).hasClass("disabled") == true) {
+    if ($(_obj).hasClass("disabled") == true) {
         return;
     }
     let t_code = $(_obj).attr("code");
@@ -163,6 +163,8 @@ function onClickBtnMenuSmall(_obj) {
         }
     } else if (m_big_button_num == 2) {
         chk_num = parseInt(m_osc_number_list.cmd_3);
+    } else if (m_big_button_num == 3) {
+        chk_num = parseInt(m_osc_number_list.cmd_4);
     }
     let t_cue = convCue(m_device_code, chk_num + parseInt(t_code));
     setCmd(t_cue);
@@ -183,10 +185,10 @@ function onClickBtnMenu(_obj) {
         $(".menu_page_txt").hide();
         $(".menu_list_zone").show();
         setMenuList(0);
-        if(m_device_code == 3){            
+        if (m_device_code == 3) {
             $(".menu_btn_b[code='1']").addClass("disabled");
             $(".menu_btn_b[code='3']").addClass("disabled");
-        }else{
+        } else {
             $(".menu_btn_b[code='1']").removeClass("disabled");
             $(".menu_btn_b[code='3']").removeClass("disabled");
         }
@@ -195,7 +197,8 @@ function onClickBtnMenu(_obj) {
 
 function setMenuList(_num) {
     let t_cmd = "";
-    let t_cue ="";
+    let t_cue = "";
+    let chk_num = "";
     $(".menu_btn_s").removeClass("active");
     $(".menu_bot_box").hide();
     t_cmd = "";
@@ -205,7 +208,7 @@ function setMenuList(_num) {
             $(".menu_btn_b").removeClass("active");
             break;
         case 1:
-            t_chk = parseInt(m_osc_number_list.cmd_start)+1;
+            t_chk = parseInt(m_osc_number_list.cmd_start) + 1;
             t_cue = convCue(m_device_code, t_chk);
             setCmd(t_cue);
             $(".menu_bot_box[code='2']").show();
@@ -223,9 +226,13 @@ function setMenuList(_num) {
 
             break;
         case 4:
-            let chk_num = parseInt(m_osc_number_list.cmd_4);
-            t_cue = convCue(m_device_code, chk_num);
-            setCmd(t_cue);
+            if (m_device_code == "0" || m_device_code == "2") {
+                $(".menu_bot_box[code='3']").show();
+            } else {
+                chk_num = parseInt(m_osc_number_list.cmd_4);
+                t_cue = convCue(m_device_code, chk_num);
+                setCmd(t_cue);
+            }
             break;
     }
 }
@@ -958,7 +965,7 @@ function convCue(_num, _cue) {
 function setInitFsCommand() {
     if (window.chrome.webview) {
         window.chrome.webview.addEventListener('message', (arg) => {
-            //console.log(arg.data);
+            console.log(arg.data);
             setCommand(arg.data);
         });
     }
@@ -976,10 +983,10 @@ function setCommand(_data) {
         setDevicelVolumeSetting(parts[2], parts[3]);
     } else if (parts[1] == "ON" || parts[1] == "OFF") {
         setDevicelPowerSetting(parts[1], parts[2], parts[3]);
-    } else if(parts[1] == "DOWN"){
-        if(parts[2]=="START"){
+    } else if (parts[1] == "DOWN") {
+        if (parts[2] == "START") {
             $(".loading_cover").show();
-        }else if(parts[2]=="OK"){
+        } else if (parts[2] == "OK") {
             $(".loading_cover").hide();
         }
     }
