@@ -14,7 +14,7 @@ let m_curr_page = "";
 var m_icon = null;
 var m_icon_container = null;
 var m_icon_dx = 5; // x축 방향 속도
-var m_icon_dy = 2.5; // y축 방향 속도){
+var m_icon_dy = 2.5; // y축 방향 속도
 var m_pass_click_cnt = 0;
 var m_pass_timeout;
 let m_curr_pass_txt = "";
@@ -56,6 +56,11 @@ function setInit() {
     $(".popup_ok_btn").on("touchstart mousedown", function (e) {
         e.preventDefault();
         onClickBtnPopupOk(this);
+    });
+
+    $(".popup_pause_btn").on("touchstart mousedown", function (e) {
+        e.preventDefault();
+        onClickBtnPopupPause(this);
     });
 
     $(".popup_close_btn").on("touchstart mousedown", function (e) {
@@ -245,6 +250,10 @@ function onClickBtnPopupOk(_obj) {
     console.log(m_checked_radio);
     sendPowerInfo(m_main_header.powerControlUrl, m_checked_radio);
     //$(".popup_page").hide();
+}
+
+function onClickBtnPopupPause(_obj) {
+    setCmd("1");
 }
 
 function onClickBtnPopupClose(_obj) {
@@ -528,7 +537,7 @@ function sendLoginInfo(_url) {
         })
         .then(data => {
             $(".loading_cover").hide();
-            //console.log(data);
+            console.log(data);
             let t_code = data.header.code;
             if (t_code != undefined && t_code != null) {
                 //console.log(t_code);
@@ -818,7 +827,7 @@ function moveIcon() {
     var containerHeight = m_icon_container.height();
     var iconWidth = m_icon.width();
     var iconHeight = m_icon.height();
-
+    
     // 벽 충돌 감지
     if (iconPos.left + m_icon_dx < 0 || iconPos.left + iconWidth + m_icon_dx > containerWidth) {
         m_icon_dx = -m_icon_dx; // x축 방향 반전
