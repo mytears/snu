@@ -154,22 +154,27 @@ function onClickBtnMenuSmall(_obj) {
     $(".menu_btn_s").removeClass("active");
     $(_obj).addClass("active");
 
-    //console.log(m_device_code, m_big_button_num, t_code);
-
-    //m_osc_number_list
     let chk_num = 0;
-    if (m_big_button_num == 0) {
-        chk_num = parseInt(m_osc_number_list.cmd_0);
-    } else if (m_big_button_num == 1) {
-        if (t_group == "0") {
-            chk_num = parseInt(m_osc_number_list.cmd_1);
-        } else if (t_group == "1") {
-            chk_num = parseInt(m_osc_number_list.cmd_2);
-        }
-    } else if (m_big_button_num == 2) {
-        chk_num = parseInt(m_osc_number_list.cmd_3);
-    } else if (m_big_button_num == 3) {
-        chk_num = parseInt(m_osc_number_list.cmd_4);
+    
+    if(parseInt(t_code)<100){
+        if (m_big_button_num == 0) {
+            chk_num = parseInt(m_osc_number_list.cmd_0);
+        } else if (m_big_button_num == 1) {
+            if (t_group == "0") {
+                chk_num = parseInt(m_osc_number_list.cmd_1);
+            } else if (t_group == "1") {
+                chk_num = parseInt(m_osc_number_list.cmd_2);
+            }
+        } else if (m_big_button_num == 2) {
+            chk_num = parseInt(m_osc_number_list.cmd_3);
+        } else if (m_big_button_num == 3) {
+            chk_num = parseInt(m_osc_number_list.cmd_4);
+        }        
+    }else{
+        if (m_big_button_num == 0) {
+            t_code = parseInt(t_code)-100;
+            chk_num = parseInt(m_osc_number_list.cmd_5);
+        }  
     }
     let t_cue = convCue(m_device_code, chk_num + parseInt(t_code));
     setCmd(t_cue);
@@ -206,6 +211,7 @@ function setMenuList(_num) {
     let chk_num = "";
     $(".menu_btn_s").removeClass("active");
     $(".menu_bot_box").hide();
+    $(".menu_btn_s").show();
     t_cmd = "";
     m_big_button_num = (_num - 1);
     switch (_num) {
@@ -217,6 +223,10 @@ function setMenuList(_num) {
             t_cue = convCue(m_device_code, t_chk);
             setCmd(t_cue);
             $(".menu_bot_box[code='2']").show();
+            if(m_device_code=="2" || m_device_code=="3"){
+                $(".menu_btn_s[code='100']").hide();
+            }
+            
             break;
         case 2:
             $(".menu_bot_box[code='0'] .box_title").show();
