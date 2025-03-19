@@ -211,7 +211,6 @@ function setMenuList(_num) {
     let chk_num = "";
     $(".menu_btn_s").removeClass("active");
     $(".menu_bot_box").hide();
-    $(".menu_btn_s").show();
     t_cmd = "";
     m_big_button_num = (_num - 1);
     switch (_num) {
@@ -223,8 +222,10 @@ function setMenuList(_num) {
             t_cue = convCue(m_device_code, t_chk);
             setCmd(t_cue);
             $(".menu_bot_box[code='2']").show();
-            if(m_device_code=="2" || m_device_code=="3"){
-                $(".menu_btn_s[code='100']").hide();
+            if(m_device_code=="0" || m_device_code=="1"){
+                $(".menu_btn_s[code='100']").html("Echoed Of Light Media");
+            }else{
+                $(".menu_btn_s[code='100']").html("");
             }
             
             break;
