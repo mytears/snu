@@ -141,6 +141,9 @@ function onClickBtnMenuBig(_obj) {
         return;
     }
     let t_code = $(_obj).attr("code");
+    console.log("onClickBtnMenuBig", m_device_code, t_code);
+    $(".menu_mid_title").html("");
+    $(".menu_mid_name").html("");
     m_cate_code = t_code;
     let t_num = parseInt(t_code) + 1;
     $(".menu_btn_b").removeClass("active");
@@ -154,9 +157,16 @@ function onClickBtnMenuSmall(_obj) {
     $(".menu_btn_s").removeClass("active");
     $(_obj).addClass("active");
 
+    console.log("onClickBtnMenuSmall", m_device_code, t_code);
+    let t_title = $(_obj).attr("title");
+    if (t_title == "") {
+        t_title = "-";
+    }
+    $(".menu_mid_title").html(t_title);
+    $(".menu_mid_name").html("");
     let chk_num = 0;
-    
-    if(parseInt(t_code)<100){
+
+    if (parseInt(t_code) < 100) {
         if (m_big_button_num == 0) {
             chk_num = parseInt(m_osc_number_list.cmd_0);
         } else if (m_big_button_num == 1) {
@@ -169,14 +179,27 @@ function onClickBtnMenuSmall(_obj) {
             chk_num = parseInt(m_osc_number_list.cmd_3);
         } else if (m_big_button_num == 3) {
             chk_num = parseInt(m_osc_number_list.cmd_4);
-        }        
-    }else{
+        }
+    } else {
         if (m_big_button_num == 0) {
-            t_code = parseInt(t_code)-100;
+            t_code = parseInt(t_code) - 100;
             chk_num = parseInt(m_osc_number_list.cmd_5);
-        }  
+        }else if (m_big_button_num == 1) {
+            if (t_group == "1") {
+                let t_cmd_num = 0;
+                if(m_device_code==0){
+                    t_cmd_num = 2801;
+                }else if(m_device_code==1){
+                    t_cmd_num = 3701;
+                }else if(m_device_code==2){
+                    t_cmd_num = 1901;
+                }
+                chk_num = t_cmd_num;
+            }
+        } 
     }
     let t_cue = convCue(m_device_code, chk_num + parseInt(t_code));
+    $(".menu_mid_name").html(t_cue);
     setCmd(t_cue);
 }
 
@@ -185,15 +208,21 @@ function onClickBtnMenu(_obj) {
     let t_code = $(_obj).closest('.menu_box').attr('code');
     m_device_code = t_code;
 
+    console.log("onClickBtnMenu", t_code);
+
     if ($(_obj).hasClass("active") == true) {
         $(".menu_btn").removeClass("active");
         $(".menu_page_txt").show();
         $(".menu_list_zone").hide();
+        $(".menu_mid_title").html("");
+        $(".menu_mid_name").html("");
     } else {
         $(".menu_btn").removeClass("active");
         $(_obj).addClass("active");
         $(".menu_page_txt").hide();
         $(".menu_list_zone").show();
+        $(".menu_mid_title").html("");
+        $(".menu_mid_name").html("");
         setMenuList(0);
         if (m_device_code == 3) {
             $(".menu_btn_b[code='1']").addClass("disabled");
@@ -210,7 +239,9 @@ function setMenuList(_num) {
     let t_cue = "";
     let chk_num = "";
     $(".menu_btn_s").removeClass("active");
+
     $(".menu_bot_box").hide();
+
     t_cmd = "";
     m_big_button_num = (_num - 1);
     switch (_num) {
@@ -222,23 +253,24 @@ function setMenuList(_num) {
             t_cue = convCue(m_device_code, t_chk);
             setCmd(t_cue);
             $(".menu_bot_box[code='2']").show();
+
+            /*
             if(m_device_code=="0" || m_device_code=="1"){
                 $(".menu_btn_s[code='100']").html("Echoed Of Light Media");
             }else{
                 $(".menu_btn_s[code='100']").html("");
             }
-            
+            */
+
             break;
         case 2:
             $(".menu_bot_box[code='0'] .box_title").show();
-            $(".menu_bot_box[code='0'] .menu_btn_s[code='4']").show();
             $(".menu_bot_box[code='0']").show();
             $(".menu_bot_box[code='1']").show();
             break;
         case 3:
-            $(".menu_bot_box[code='0'] .box_title").hide();
-            $(".menu_bot_box[code='0'] .menu_btn_s[code='4']").hide();
-            $(".menu_bot_box[code='0']").show();
+            $(".menu_bot_box[code='4'] .box_title").hide();
+            $(".menu_bot_box[code='4']").show();
 
             break;
         case 4:
@@ -681,9 +713,9 @@ function setInitSetting() {
 
     $(".alert_page").hide();
     $(".popup_page").hide();
-    $(".menu_page").hide();
     $(".pass_page").hide();
-    $(".main_page").show();
+    //    $(".menu_page").hide();
+    //    $(".main_page").show();
     m_pass_mode = "online";
 
     setTimeout(function () {
@@ -838,7 +870,7 @@ function moveIcon() {
     var containerHeight = m_icon_container.height();
     var iconWidth = m_icon.width();
     var iconHeight = m_icon.height();
-    
+
     // 벽 충돌 감지
     if (iconPos.left + m_icon_dx < 0 || iconPos.left + iconWidth + m_icon_dx > containerWidth) {
         m_icon_dx = -m_icon_dx; // x축 방향 반전

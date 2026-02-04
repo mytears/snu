@@ -1,0 +1,58 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="298" height="248" viewBox="0 0 298 248">
+  <defs>
+    <filter id="패스_3974" x="0" y="0" width="298" height="248" filterUnits="userSpaceOnUse">
+      <feOffset dy="3" input="SourceAlpha"/>
+      <feGaussianBlur stdDeviation="3" result="blur"/>
+      <feFlood flood-color="#06193d"/>
+      <feComposite operator="in" in2="blur"/>
+      <feComposite in="SourceGraphic"/>
+    </filter>
+    <linearGradient id="linear-gradient" x1="0.138" x2="0.89" y2="1" gradientUnits="objectBoundingBox">
+      <stop offset="0" stop-color="#fff"/>
+      <stop offset="1" stop-color="#f1f3fc"/>
+    </linearGradient>
+    <filter id="패스_3975" x="9" y="7" width="280" height="221" filterUnits="userSpaceOnUse">
+      <feOffset dy="3" input="SourceAlpha"/>
+      <feGaussianBlur result="blur-2"/>
+      <feFlood flood-color="#fff" result="color"/>
+      <feComposite operator="out" in="SourceGraphic" in2="blur-2"/>
+      <feComposite operator="in" in="color"/>
+      <feComposite operator="in" in2="SourceGraphic"/>
+    </filter>
+    <filter id="타원_6" x="196" y="139" width="95" height="95" filterUnits="userSpaceOnUse">
+      <feOffset dy="5" input="SourceAlpha"/>
+      <feGaussianBlur stdDeviation="5" result="blur-3"/>
+      <feFlood flood-color="#aec5f3"/>
+      <feComposite operator="in" in2="blur-3"/>
+      <feComposite in="SourceGraphic"/>
+    </filter>
+    <filter id="타원_6-2" x="196" y="139" width="95" height="95" filterUnits="userSpaceOnUse">
+      <feOffset dy="1" input="SourceAlpha"/>
+      <feGaussianBlur result="blur-4"/>
+      <feFlood flood-color="#fff" result="color-2"/>
+      <feComposite operator="out" in="SourceGraphic" in2="blur-4"/>
+      <feComposite operator="in" in="color-2"/>
+      <feComposite operator="in" in2="SourceGraphic"/>
+    </filter>
+  </defs>
+  <g id="bt_play_list" transform="translate(9 6)">
+    <g transform="matrix(1, 0, 0, 1, -9, -6)" filter="url(#패스_3974)">
+      <path id="패스_3974-2" data-name="패스 3974" d="M36,40H244a36,36,0,0,1,36,36V234a36,36,0,0,1-36,36H36A36,36,0,0,1,0,234V76A36,36,0,0,1,36,40Z" transform="translate(9 -34)" fill="#c5c9dc"/>
+    </g>
+    <g data-type="innerShadowGroup">
+      <path id="패스_3975-2" data-name="패스 3975" d="M36,40H244c19.882,0,36,15.6,36,34.843V226.157C280,245.4,263.882,261,244,261H36c-19.882,0-36-15.6-36-34.843V74.843C0,55.6,16.118,40,36,40Z" transform="translate(0 -39)" fill="url(#linear-gradient)"/>
+      <g transform="matrix(1, 0, 0, 1, -9, -6)" filter="url(#패스_3975)">
+        <path id="패스_3975-3" data-name="패스 3975" d="M36,40H244c19.882,0,36,15.6,36,34.843V226.157C280,245.4,263.882,261,244,261H36c-19.882,0-36-15.6-36-34.843V74.843C0,55.6,16.118,40,36,40Z" transform="translate(9 -33)" fill="#fff"/>
+      </g>
+    </g>
+    <g data-type="innerShadowGroup">
+      <g transform="matrix(1, 0, 0, 1, -9, -6)" filter="url(#타원_6)">
+        <circle id="타원_6-3" data-name="타원 6" cx="32.5" cy="32.5" r="32.5" transform="translate(211 149)" fill="#fff"/>
+      </g>
+      <g transform="matrix(1, 0, 0, 1, -9, -6)" filter="url(#타원_6-2)">
+        <circle id="타원_6-4" data-name="타원 6" cx="32.5" cy="32.5" r="32.5" transform="translate(211 149)" fill="#fff"/>
+      </g>
+    </g>
+    <path id="합치기_1" data-name="합치기 1" d="M-1077.938-9451.5a4.129,4.129,0,0,1-2.061-3.6v-14.786a4.128,4.128,0,0,1,2.061-3.6,3.831,3.831,0,0,1,4.038.149l11.083,7.394A4.143,4.143,0,0,1-1061-9462.5a4.144,4.144,0,0,1-1.816,3.454l-11.083,7.395a3.855,3.855,0,0,1-2.139.65A3.835,3.835,0,0,1-1077.938-9451.5Zm1.9-3.6,11.083-7.392Z" transform="translate(1307 9638)" fill="#072a82"/>
+  </g>
+</svg>

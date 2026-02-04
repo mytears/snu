@@ -228,7 +228,7 @@
 
 .menu_zone {
     position: absolute;
-    top: 380px;
+    top: 220px;
     z-index: 10;
     width: 1610px;
     /*    border: 3px solid #FF0000;*/
@@ -238,7 +238,7 @@
 
 .menu_box {
     width: 800px;
-    height: 920px;
+    height: 850px;
     /*    border: 3px solid #FF0000;*/
     display: flex;
     justify-content: center;
@@ -335,13 +335,13 @@
     position: absolute;
     z-index: 10;
     text-align: center;
-    top: 2440px;
+    top: 2040px;
 }
 
 
 .menu_list_zone {
     position: absolute;
-    top: 2410px;
+    top: 1960px;
     z-index: 10;
     width: 1700px;
 /*    border: 3px solid #FF0000;*/
@@ -361,7 +361,7 @@
 
 .menu_btn_b {
     width: 386px;
-    height: 192px;
+    height: 160px;
     background: #1B2E81 0% 0% no-repeat padding-box;
     box-shadow: inset 0px 3px 0px #506AE8, 0px 30px 30px #00000029;
     border-radius: 30px;
@@ -372,6 +372,7 @@
     justify-content: center;
     align-items: center;
     margin-right: 36px;
+    box-sizing: border-box;
 }
 
 .menu_btn_b:last-child {
@@ -387,18 +388,34 @@
     opacity:0.5;
 }
 
+.menu_mid_zone{
+    width: 100%;
+    height: 168px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    font-size: 60px;
+    margin-top: 50px;
+    line-height: 1.4;
+    font-weight: 700;
+}
 
 .menu_bot_zone {
     display: flex;
     flex-direction: column;
-    margin-top: 115px;
+    margin-top: 30px;
     font-size: 47px;
-    padding-left: 136px;
+    padding-left: 53px;
 }
 
 .menu_bot_box{
-    margin-bottom: 100px;
+/*    margin-bottom: 100px;*/
     width: 1600px;
+}
+
+.box_btns_ppt{
+    flex-wrap: wrap;
 }
 
 .box_btns_big{
@@ -412,13 +429,13 @@
 
 .box_btns {
     display: flex;
-    margin-top: 25px;
-    width: 1600px;
+/*    margin-top: 25px;*/
+    width: 1700px;
 }
 
 .menu_btn_s {
-    width: 248px;
-    height: 127px;
+    width: 300px;
+    height: 160px;
     background: #4C61B7 0% 0% no-repeat padding-box;
     box-shadow: 0px 30px 30px #00000029;
     border: 10px solid #7788D2;
@@ -427,10 +444,14 @@
     justify-content: center;
     align-items: center;
     margin-right: 24px;
-    margin-bottom: 24px;
+    margin-bottom: 42px;
     font-weight: 700;
     text-align: center;
     font-size: 45px;
+    padding: 10px;
+    box-sizing: border-box;
+    word-break: break-all;
+    line-height: 1.1;
 }
 
 .menu_btn_s:last-child {
