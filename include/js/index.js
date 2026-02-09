@@ -11,12 +11,12 @@ let m_notice_timeout = null;
 
 let m_curr_page = "";
 
-var m_icon = null;
-var m_icon_container = null;
-var m_icon_dx = 5; // x축 방향 속도
-var m_icon_dy = 2.5; // y축 방향 속도
-var m_pass_click_cnt = 0;
-var m_pass_timeout;
+let m_icon = null;
+let m_icon_container = null;
+let m_icon_dx = 5; // x축 방향 속도
+let m_icon_dy = 2.5; // y축 방향 속도
+let m_pass_click_cnt = 0;
+let m_pass_timeout;
 let m_curr_pass_txt = "";
 let m_checked_radio = "ON";
 let m_pass_mode = "online";
@@ -30,6 +30,7 @@ let m_osc_number_list = [];
 let m_cmd_list = [];
 let m_is_first_page = true;
 let m_big_button_num = -1;
+let menuTextTimeout;
 
 function setInit() {
 
@@ -142,8 +143,8 @@ function onClickBtnMenuBig(_obj) {
     }
     let t_code = $(_obj).attr("code");
     console.log("onClickBtnMenuBig", m_device_code, t_code);
-    $(".menu_mid_title").html("");
-    $(".menu_mid_name").html("");
+    // $(".menu_mid_title").html("");
+    // $(".menu_mid_name").html("");
     m_cate_code = t_code;
     let t_num = parseInt(t_code) + 1;
     $(".menu_btn_b").removeClass("active");
@@ -152,54 +153,59 @@ function onClickBtnMenuBig(_obj) {
 }
 
 function onClickBtnMenuSmall(_obj) {
-    let t_code = $(_obj).attr("code");
-    let t_group = $(_obj).closest('.menu_bot_box').attr('code');
+    const t_code_str = $(_obj).attr("code");
+    let t_code_num = parseInt(t_code_str, 10);
+    const t_group = $(_obj).closest('.menu_bot_box').attr('code');
     $(".menu_btn_s").removeClass("active");
     $(_obj).addClass("active");
-
-    console.log("onClickBtnMenuSmall", m_device_code, t_code);
-    let t_title = $(_obj).attr("title");
-    if (t_title == "") {
-        t_title = "-";
-    }
-    $(".menu_mid_title").html(t_title);
+    console.log("onClickBtnMenuSmall", m_device_code, t_code_num);
+    $(".menu_mid_title").html("");
     $(".menu_mid_name").html("");
     let chk_num = 0;
-
-    if (parseInt(t_code) < 100) {
-        if (m_big_button_num == 0) {
-            chk_num = parseInt(m_osc_number_list.cmd_0);
-        } else if (m_big_button_num == 1) {
-            if (t_group == "0") {
-                chk_num = parseInt(m_osc_number_list.cmd_1);
-            } else if (t_group == "1") {
-                chk_num = parseInt(m_osc_number_list.cmd_2);
-            }
-        } else if (m_big_button_num == 2) {
-            chk_num = parseInt(m_osc_number_list.cmd_3);
-        } else if (m_big_button_num == 3) {
-            chk_num = parseInt(m_osc_number_list.cmd_4);
+    const osc = m_osc_number_list;
+    if (t_code_num < 100) {
+        switch (m_big_button_num) {
+            case 0:
+                chk_num = parseInt(osc.cmd_0, 10);
+                break;
+            case 1:
+                chk_num = (t_group === "0") ? parseInt(osc.cmd_1, 10) :
+                    (t_group === "1") ? parseInt(osc.cmd_2, 10) : 0;
+                break;
+            case 2:
+                chk_num = parseInt(osc.cmd_3, 10);
+                break;
+            case 3:
+                chk_num = parseInt(osc.cmd_4, 10);
+                break;
         }
-    } else {
-        if (m_big_button_num == 0) {
-            t_code = parseInt(t_code) - 100;
-            chk_num = parseInt(m_osc_number_list.cmd_5);
-        }else if (m_big_button_num == 1) {
-            if (t_group == "1") {
-                let t_cmd_num = 0;
-                if(m_device_code==0){
-                    t_cmd_num = 2801;
-                }else if(m_device_code==1){
-                    t_cmd_num = 3701;
-                }else if(m_device_code==2){
-                    t_cmd_num = 1901;
+    } else { // t_code_num >= 100
+        switch (m_big_button_num) {
+            case 0:
+                t_code_num -= 100;
+                chk_num = parseInt(osc.cmd_5, 10);
+                break;
+            case 1:
+                if (t_group === "1") {
+                    const deviceCmdMap = {
+                        0: 2801,
+                        1: 3701,
+                        2: 1901
+                    };
+                    chk_num = deviceCmdMap[m_device_code] || 0;
                 }
-                chk_num = t_cmd_num;
-            }
-        } 
+                break;
+        }
     }
-    let t_cue = convCue(m_device_code, chk_num + parseInt(t_code));
+    const t_cue = convCue(m_device_code, chk_num + t_code_num);
+    const t_title = $(_obj).attr("title") || "-";
+    $(".menu_mid_title").html(t_title);
     $(".menu_mid_name").html(t_cue);
+    clearTimeout(menuTextTimeout);
+    menuTextTimeout = setTimeout(() => {
+        $(".menu_mid_title").html("");
+        $(".menu_mid_name").html("");
+    }, 60000);
     setCmd(t_cue);
 }
 
@@ -214,15 +220,15 @@ function onClickBtnMenu(_obj) {
         $(".menu_btn").removeClass("active");
         $(".menu_page_txt").show();
         $(".menu_list_zone").hide();
-        $(".menu_mid_title").html("");
-        $(".menu_mid_name").html("");
+        // $(".menu_mid_title").html("");
+        // $(".menu_mid_name").html("");
     } else {
         $(".menu_btn").removeClass("active");
         $(_obj).addClass("active");
         $(".menu_page_txt").hide();
         $(".menu_list_zone").show();
-        $(".menu_mid_title").html("");
-        $(".menu_mid_name").html("");
+        // $(".menu_mid_title").html("");
+        // $(".menu_mid_name").html("");
         setMenuList(0);
         if (m_device_code == 3) {
             $(".menu_btn_b[code='1']").addClass("disabled");
@@ -304,8 +310,8 @@ function onClickBtnPopupClose(_obj) {
 }
 
 function onClickControlRadio(_obj) {
-    var id = $(_obj).attr('id');
-    var code = $(_obj).attr('code');
+    const id = $(_obj).attr('id');
+    const code = $(_obj).attr('code');
     m_checked_radio = code;
 }
 
@@ -350,7 +356,7 @@ function setCmd(_str) {
 
 function setCmdOLD(_type, _str) {
     let t_cmd = "";
-    for (var i = 0; i < m_cmd_list.length; i += 1) {
+    for (let i = 0; i < m_cmd_list.length; i += 1) {
         if (m_cmd_list[i].type == _type) {
             t_cmd = m_cmd_list[i].cmd_name + m_header.cmd_line + _str;
             break;
@@ -360,8 +366,8 @@ function setCmdOLD(_type, _str) {
 }
 
 function onVolumeChange(_obj) {
-    var vol = $(_obj).val();
-    var codeValue = $(_obj).closest('.menu_box').attr('code');
+    const vol = $(_obj).val();
+    const codeValue = $(_obj).closest('.menu_box').attr('code');
     //console.log(vol);
     let t_vol_db = volumeToDb(parseInt(vol));
     let t_cue = convCue(codeValue, t_vol_db);
@@ -370,14 +376,14 @@ function onVolumeChange(_obj) {
 }
 
 function onVolumeSlide(_obj) {
-    var value = $(_obj).val();
-    var min = $(_obj).attr('min');
-    var max = $(_obj).attr('max');
-    var percentage = Math.round(((value - min) / (max - min)) * 100);
+    const value = $(_obj).val();
+    const min = $(_obj).attr('min');
+    const max = $(_obj).attr('max');
+    const percentage = Math.round(((value - min) / (max - min)) * 100);
     //console.log(value, min, max, percentage);
     $(_obj).css('background', `linear-gradient(to right, #0EAAFB ${percentage}%, #FFFFFF33 ${percentage}%)`);
-    var codeValue = $(_obj).closest('.menu_box').attr('code');
-    var volumeText = $(_obj).closest('.menu_box').find('.menu_volume_txt');
+    const codeValue = $(_obj).closest('.menu_box').attr('code');
+    const volumeText = $(_obj).closest('.menu_box').find('.menu_volume_txt');
     volumeText.text(value);
 }
 
@@ -671,7 +677,7 @@ function setTouched() {
 
 //kiosk_contents를 읽기
 function setContents() {
-    var t_url = m_contents_url;
+    const t_url = m_contents_url;
     $.ajax({
         url: t_url,
         dataType: 'json',
@@ -703,8 +709,8 @@ function setInitSetting() {
     if (m_header.logo_mode == "ani") {
         startAnimation();
     } else {
-        var iconWidth = m_icon.width();
-        var iconHeight = m_icon.height();
+        const iconWidth = m_icon.width();
+        const iconHeight = m_icon.height();
         m_icon.css({
             left: 2160 / 2 - iconWidth / 2,
             top: 3840 / 2 - iconHeight / 2
@@ -736,7 +742,7 @@ function setMainReset() {
 }
 
 function setDeviceAllVolumeSetting() {
-    for (var i = 0; i < m_main_list.length; i += 1) {
+    for (let i = 0; i < m_main_list.length; i += 1) {
         let menuBox = $(".menu_box").eq(i);
         let data = m_main_list[i];
         let vol = parseInt(data.soundLevel);
@@ -765,7 +771,7 @@ function setDevicelVolumeSetting(_name, _vol) {
     let vol = 0;
     let t_num = -1;
     if (m_main_list.length == 0) {
-        for (var i = 0; i < m_device_list.length; i += 1) {
+        for (let i = 0; i < m_device_list.length; i += 1) {
             if (m_device_list[i].areaCode == _name) {
                 data = m_device_list[i];
                 t_num = i;
@@ -773,7 +779,7 @@ function setDevicelVolumeSetting(_name, _vol) {
             }
         }
     } else {
-        for (var i = 0; i < m_main_list.length; i += 1) {
+        for (let i = 0; i < m_main_list.length; i += 1) {
             if (m_main_list[i].areaCode == _name) {
                 data = m_main_list[i];
                 t_num = i;
@@ -812,14 +818,14 @@ function setDeviceAllPowerSetting(_cmd) {
         return;
     }
     if (m_main_list.length == 0) {
-        for (var i = 0; i < m_device_list.length; i += 1) {
+        for (let i = 0; i < m_device_list.length; i += 1) {
             //t_cmd = "/cue/" + (i + 1) + "/" + t_chk;
             //setCmd(t_cue);
             let t_cue = convCue(i, t_chk);
             setCmd(t_cue);
         }
     } else {
-        for (var i = 0; i < m_main_list.length; i += 1) {
+        for (let i = 0; i < m_main_list.length; i += 1) {
             let t_cue = convCue(i, t_chk);
             setCmd(t_cue);
         }
@@ -832,7 +838,7 @@ function setDevicelPowerSetting(_cmd, _name, _vol) {
     let t_num = -1;
     let t_cmd = "";
     if (m_main_list.length == 0) {
-        for (var i = 0; i < m_device_list.length; i += 1) {
+        for (let i = 0; i < m_device_list.length; i += 1) {
             if (m_device_list[i].areaCode == _name) {
                 data = m_device_list[i];
                 t_num = i;
@@ -840,7 +846,7 @@ function setDevicelPowerSetting(_cmd, _name, _vol) {
             }
         }
     } else {
-        for (var i = 0; i < m_main_list.length; i += 1) {
+        for (let i = 0; i < m_main_list.length; i += 1) {
             if (m_main_list[i].areaCode == _name) {
                 data = m_main_list[i];
                 t_num = i;
@@ -865,11 +871,11 @@ function setDevicelPowerSetting(_cmd, _name, _vol) {
 }
 
 function moveIcon() {
-    var iconPos = m_icon.position();
-    var containerWidth = m_icon_container.width();
-    var containerHeight = m_icon_container.height();
-    var iconWidth = m_icon.width();
-    var iconHeight = m_icon.height();
+    const iconPos = m_icon.position();
+    const containerWidth = m_icon_container.width();
+    const containerHeight = m_icon_container.height();
+    const iconWidth = m_icon.width();
+    const iconHeight = m_icon.height();
 
     // 벽 충돌 감지
     if (iconPos.left + m_icon_dx < 0 || iconPos.left + iconWidth + m_icon_dx > containerWidth) {
