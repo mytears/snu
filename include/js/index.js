@@ -721,8 +721,8 @@ function setInitSetting() {
     $(".alert_page").hide();
     $(".popup_page").hide();
     $(".pass_page").hide();
-    //    $(".menu_page").hide();
-    //    $(".main_page").show();
+    $(".menu_page").hide();
+    $(".main_page").show();
     m_pass_mode = "online";
 
     setTimeout(function () {
