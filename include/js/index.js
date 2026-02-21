@@ -198,8 +198,8 @@ function onClickBtnMenuSmall(_obj) {
         }
     }
     const t_cue = convCue(m_device_code, chk_num + t_code_num);
-    const t_title = $(_obj).attr("title") || "-";
-    const t_desc = $(_obj).attr("desc") || "-";
+    const t_title = $(_obj).attr("title") || "";
+    const t_desc = $(_obj).attr("desc") || "";
     $(".menu_mid_title").html(t_title);
     $(".menu_mid_name").html(t_desc);
     clearTimeout(menuTextTimeout);
