@@ -141,6 +141,11 @@ function onClickBtnMenuBig(_obj) {
     if ($(_obj).hasClass("disabled") == true) {
         return;
     }
+    
+    clearTimeout(menuTextTimeout);
+    $(".menu_mid_title").html("");
+    $(".menu_mid_name").html("");
+    
     let t_code = $(_obj).attr("code");
     console.log("onClickBtnMenuBig", m_device_code, t_code);
     // $(".menu_mid_title").html("");
@@ -157,7 +162,7 @@ function onClickBtnMenuSmall(_obj) {
     let t_code_num = parseInt(t_code_str, 10);
     const t_group = $(_obj).closest('.menu_bot_box').attr('code');
     $(".menu_btn_s").removeClass("active");
-    $(_obj).addClass("active");
+    //$(_obj).addClass("active");
     console.log("onClickBtnMenuSmall", m_device_code, t_code_num);
     $(".menu_mid_title").html("");
     $(".menu_mid_name").html("");
@@ -202,6 +207,7 @@ function onClickBtnMenuSmall(_obj) {
     const t_desc = $(_obj).attr("desc") || "";
     $(".menu_mid_title").html(t_title);
     $(".menu_mid_name").html(t_desc);
+    //$(".menu_mid_name").html(t_desc + " (" + t_cue + ")");
     clearTimeout(menuTextTimeout);
     menuTextTimeout = setTimeout(() => {
         $(".menu_mid_title").html("");
@@ -216,7 +222,12 @@ function onClickBtnMenu(_obj) {
     m_device_code = t_code;
 
     console.log("onClickBtnMenu", t_code);
-
+    
+    clearTimeout(menuTextTimeout);
+    $(".menu_mid_title").html("");
+    $(".menu_mid_name").html("");
+    
+    
     if ($(_obj).hasClass("active") == true) {
         $(".menu_btn").removeClass("active");
         $(".menu_page_txt").show();
