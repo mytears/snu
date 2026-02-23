@@ -23,6 +23,7 @@
     /* smooth 처리 */
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
+    -webkit-tap-highlight-color: transparent;
 }
 
 img {

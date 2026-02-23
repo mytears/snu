@@ -458,7 +458,7 @@
     margin-right: 0px;
 }
 
-.menu_btn_s:active {
+.menu_btn_s:active, .menu_btn_s.is-active {
     background: #F7F8FF 0% 0% no-repeat padding-box;
     color: #2B44B3;
 }

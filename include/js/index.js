@@ -130,6 +130,22 @@ function setInit() {
         e.preventDefault();
         setTouched();
     });
+    
+    
+    const buttons = document.querySelectorAll('.menu_btn_s');
+
+    buttons.forEach(btn => {
+        btn.addEventListener('touchstart', function() {
+            this.classList.add('is-active');
+        }, {passive: true});
+
+        btn.addEventListener('touchend', function() {
+            this.classList.remove('is-active');
+        }, {passive: true});
+    });
+    
+    
+    
 
     m_time_last = new Date().getTime();
     setInterval(setMainInterval, 1000);
