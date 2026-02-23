@@ -154,6 +154,7 @@ function onClickBtnMenuBig(_obj) {
     let t_num = parseInt(t_code) + 1;
     $(".menu_btn_b").removeClass("active");
     $(_obj).addClass("active");
+    
     setMenuList(t_num);
 }
 
@@ -292,6 +293,8 @@ function setMenuList(_num) {
 
             break;
         case 4:
+            setCallWebToApp('OSC_SEND', "/composition/groups/2/columns/1/connect");
+            
             if (m_device_code == "0" || m_device_code == "2") {
                 $(".menu_bot_box[code='3']").show();
             } else {
