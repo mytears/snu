@@ -804,8 +804,11 @@ function setDevicelVolumeSetting(_name, _vol) {
         return;
     }
 
-    let menuBox = $(".menu_box").eq(t_num);
-
+    //let menuBox = $(".menu_box").eq(t_num);
+    // 2. DOM 요소 선택 (eq 대신 attribute selector 사용)
+    // HTML의 <div class="menu_box" code="..."> 부분과 매칭
+    let menuBox = $(".menu_box[code='" + t_num.toString() + "']");
+    
     vol = parseInt(_vol);
     menuBox.find(".menu_name").text(data.areaName); // 메뉴 이름 변경
     menuBox.find(".volume").val(vol); // 슬라이더 값 변경
@@ -1045,18 +1048,18 @@ function setCommand(_data) {
     console.log("setCommand", _data);
     const parts = _data.trim().split('|');
     // 첫 번째 값이 "S"이고 마지막 값이 "E"인지 확인
-    if (parts[0] !== "S" || parts[parts.length - 1] !== "E") {
+    if (parts[1] !== "S" || parts[parts.length - 1] !== "E") {
         console.log(`[Invalid] ${_data} - Incorrect start or end.`);
         return null;
     }
-    if (parts[1] == "SOUND") {
+    if (parts[2] == "SOUND") {
         setDevicelVolumeSetting(parts[2], parts[3]);
-    } else if (parts[1] == "ON" || parts[1] == "OFF") {
+    } else if (parts[2] == "ON" || parts[1] == "OFF") {
         setDevicelPowerSetting(parts[1], parts[2], parts[3]);
-    } else if (parts[1] == "DOWN") {
-        if (parts[2] == "START") {
+    } else if (parts[2] == "DOWN") {
+        if (parts[3] == "START") {
             $(".loading_cover").show();
-        } else if (parts[2] == "OK") {
+        } else if (parts[3] == "OK") {
             $(".loading_cover").hide();
         }
     }
