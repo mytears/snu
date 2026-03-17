@@ -1074,7 +1074,7 @@ function setCommand(_data) {
     if (parts[2] == "SOUND") {
         setDevicelVolumeSetting(parts[2], parts[3]);
     } else if (parts[2] == "ON" || parts[2] == "OFF") {
-        setDevicelPowerSetting(parts[1], parts[2], parts[3]);
+        setDevicelPowerSetting(parts[2], parts[3], parts[4]);
     } else if (parts[2] == "DOWN") {
         if (parts[3] == "START") {
             $(".loading_cover").show();
